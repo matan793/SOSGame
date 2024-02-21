@@ -1,8 +1,9 @@
 import java.awt.*;
+import java.util.List;
 
 public class LogicalBoard {
     public short[][] logicalBoard;
-
+    public List<SosSequence> sosSequenceList;
     public LogicalBoard(int boardSize) {
 
         this.logicalBoard = new short[boardSize][boardSize];
