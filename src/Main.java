@@ -6,7 +6,7 @@ import java.awt.*;
 public class Main extends JFrame {
     public Main()
     {
-        //mirav zona
+        //mirav zona sheli
         int size = 7;
         setTitle("Sos Game");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
