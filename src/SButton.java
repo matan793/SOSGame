@@ -7,11 +7,12 @@ public class SButton extends JButton
     public ButtonType letter;
 
     public Color[] linesArray;
-    public final int row, col;
+    public final short row;
+    public final short col;
     public SButton(Image img, int row, int col)
     {
-        this.row = row;
-        this.col = col;
+        this.row = (short) row;
+        this.col = (short) col;
         linesArray = new Color[4];
         this.img=img;
         this.letter = ButtonType.Empty;

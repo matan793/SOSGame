@@ -1,15 +1,18 @@
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class LogicalBoard {
     public short[][] logicalBoard;
     public List<SosSequence> sosSequenceList;
     public LogicalBoard(int boardSize) {
+        sosSequenceList = new LinkedList<>();
 
         this.logicalBoard = new short[boardSize][boardSize];
         this.logicalBoard[4][1] = 1;
     }
-    public int CheckSos(int row, int colum)
+    public int CheckSos(short row, short colum)
     {
         int sosCount = 0;
         if(logicalBoard[row][colum] == 2)
@@ -17,21 +20,27 @@ public class LogicalBoard {
             if (colum > 0 && colum < logicalBoard[row].length - 1 && logicalBoard[row][colum-1] == 1 && logicalBoard[row][colum+1] == 1)
             {
                 //TODO::Horizontal
-               
+                SosSequence s = new SosSequence(SosSequence.Direction.Horizontal);
+                s.indecies = new short[][]{{row, colum}, {row, (short) (colum - 1)}, {row, (short) (colum + 1)}};
+                sosSequenceList.add(s);
                 sosCount++;
                 System.out.println("SOS Found(Horizontal)");
             }
             if(row > 0 && row < logicalBoard.length - 1 && logicalBoard[row-1][colum] == 1 && logicalBoard[row+1][colum] == 1)
             {
                 //TODO::Vertical
-           
+                SosSequence s = new SosSequence(SosSequence.Direction.Vertical);
+                s.indecies = new short[][]{{row, colum}, {(short) (row-1), (short) (colum)}, {(short) (row+1), (short) (colum)}};
+                sosSequenceList.add(s);
                 sosCount++;
                 System.out.println("SOS Found(Vertical)");
             }
             if(colum > 0 && colum < logicalBoard[row].length - 1 && row > 0 && row < logicalBoard.length - 1 && logicalBoard[row-1][colum-1] == 1 && logicalBoard[row+1][colum+1] == 1)
             {
                 //TODO::Diagonal(Top To Down)
-               
+                SosSequence s = new SosSequence(SosSequence.Direction.MainDiagonal);
+                s.indecies = new short[][]{{row, colum}, {(short) (row-1), (short) (colum-1)}, {(short) (row+1), (short) (colum+1)}};
+                sosSequenceList.add(s);
                 sosCount++;
                 System.out.println("SOS Found(Diagonal(Top To Down))");
 
@@ -39,7 +48,9 @@ public class LogicalBoard {
             if(colum > 0 && colum < logicalBoard[row].length - 1 && row > 0 && row < logicalBoard.length - 1 && logicalBoard[row+1][colum-1] == 1 && logicalBoard[row-1][colum+1] == 1)
             {
                 //TODO::Diagonal(Down To Top)
-               
+                SosSequence s = new SosSequence(SosSequence.Direction.SubDiagonal);
+                s.indecies = new short[][]{{row, colum}, {(short) (row+1), (short) (colum-1)}, {(short) (row-1), (short) (colum+1)}};
+                sosSequenceList.add(s);
                 sosCount++;
                 System.out.println("SOS Found(Diagonal(Down To Top))");
 
@@ -50,7 +61,7 @@ public class LogicalBoard {
             if(colum < logicalBoard[row].length - 2 && logicalBoard[row][colum+1] == 2 && logicalBoard[row][colum+2] == 1)
             {
                 //TODO::horizontal (forward)
-             
+
                 sosCount++;
                 System.out.println("SOS Found(horizontal (forward))");
 
