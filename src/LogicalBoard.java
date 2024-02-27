@@ -7,10 +7,10 @@ public class LogicalBoard {
     public short[][] logicalBoard;
     public List<SosSequence> sosSequenceList;
     public LogicalBoard(int boardSize) {
-        sosSequenceList = new LinkedList<>();
+        sosSequenceList = new ArrayList<>();
 
         this.logicalBoard = new short[boardSize][boardSize];
-        this.logicalBoard[4][1] = 1;
+
     }
     public int CheckSos(short row, short colum)
     {

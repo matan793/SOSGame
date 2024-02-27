@@ -79,6 +79,17 @@ public class SButton extends JButton
             g2d.drawLine(0, getHeight(), getWidth(), 0);
         }
     }
+
+    public void setLineArray(int i, Color lineColor) {
+        if(linesArray[i] != null)
+        {
+            linesArray[i] = new Color(linesArray[i].getRGB() + lineColor.getRGB());
+        }
+        else{
+            linesArray[i] = new Color(lineColor.getRGB());
+        }
+    }
+
     enum ButtonType{
         Empty,
         S,

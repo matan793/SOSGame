@@ -7,14 +7,21 @@ import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
 
 public class PVP extends AbstractGraphicsBoard{
+    private int turn;
+    private int playerOneScore, playerTwoScore;
     public PVP(int boardSize)
     {
         super(boardSize);
+        this.turn = 1;
+        this.playerOneScore = 0;
+        this.playerTwoScore = 0;
         for (int i = 0; i < super.Gboard.length; i++) {
             for (int j = 0; j < super.Gboard[i].length; j++) {
                 Gboard[i][j].addActionListener(new AL());
             }
         }
+       // Gboard[0][0].linesArray[0] = Color.decode().get;
+        System.out.println("player " + turn + " turn");
     }
     class AL implements ActionListener
     {
@@ -22,52 +29,41 @@ public class PVP extends AbstractGraphicsBoard{
         @Override
         public void actionPerformed(ActionEvent e) {
             SButton s = (SButton) e.getSource();
-            if (Lboard.logicalBoard[s.row][s.col] == 0) {
+            int count = 0;
+            if (logicalBoard[s.row][s.col] == 0) {
+                Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
+
                 if (state == State.S) {
-                    Lboard.logicalBoard[s.row][s.col] = (short) 1;
+                    logicalBoard[s.row][s.col] = (short) 1;
                     ImageIcon icon = new ImageIcon("src/images/s.png");
                     Image img = icon.getImage();
                     Gboard[s.row][s.col].setImg(img);
-
-                    System.out.println(Lboard.CheckSos(s.row, s.col));
+                    count = CheckSos(s.row, s.col, turnColor);
                 } else if (state == State.O) {
-                    Lboard.logicalBoard[s.row][s.col] = (short) 2;
+                    logicalBoard[s.row][s.col] = (short) 2;
                     ImageIcon icon = new ImageIcon("src/images/o.png");
                     Image img = icon.getImage();
                     Gboard[s.row][s.col].setImg(img);
-                    System.out.println(Lboard.CheckSos((short) s.row, (short) s.col));
+                    count = CheckSos(s.row, s.col, turnColor);
                 }
-                for(SosSequence sequence : Lboard.sosSequenceList)
-                {
-                    if(sequence.direction == SosSequence.Direction.Horizontal)
-                    {
-                        Gboard[sequence.indecies[0][0]][sequence.indecies[0][1]].linesArray[0] = Color.black;
-                        Gboard[sequence.indecies[1][0]][sequence.indecies[1][1]].linesArray[0] = Color.black;
-                        Gboard[sequence.indecies[2][0]][sequence.indecies[2][1]].linesArray[0] = Color.black;
 
-                    }
-                    else if(sequence.direction == SosSequence.Direction.Vertical)
-                    {
-                        Gboard[sequence.indecies[0][0]][sequence.indecies[0][1]].linesArray[1] = Color.black;
-                        Gboard[sequence.indecies[1][0]][sequence.indecies[1][1]].linesArray[1] = Color.black;
-                        Gboard[sequence.indecies[2][0]][sequence.indecies[2][1]].linesArray[1] = Color.black;
-                    }
-                    else if(sequence.direction == SosSequence.Direction.MainDiagonal)
-                    {
-                        Gboard[sequence.indecies[0][0]][sequence.indecies[0][1]].linesArray[2] = Color.black;
-                        Gboard[sequence.indecies[1][0]][sequence.indecies[1][1]].linesArray[2] = Color.black;
-                        Gboard[sequence.indecies[2][0]][sequence.indecies[2][1]].linesArray[2] = Color.black;
-                    }
-                    else if(sequence.direction == SosSequence.Direction.SubDiagonal)
-                    {
-                        Gboard[sequence.indecies[0][0]][sequence.indecies[0][1]].linesArray[3] = Color.black;
-                        Gboard[sequence.indecies[1][0]][sequence.indecies[1][1]].linesArray[3] = Color.black;
-                        Gboard[sequence.indecies[2][0]][sequence.indecies[2][1]].linesArray[3] = Color.black;
-                    }
-                    Gboard[sequence.indecies[0][0]][sequence.indecies[0][1]].repaint();
-                    Gboard[sequence.indecies[1][0]][sequence.indecies[1][1]].repaint();
-                    Gboard[sequence.indecies[2][0]][sequence.indecies[2][1]].repaint();
+                if(turn == 1)
+                    playerOneScore += count;
+                else
+                    playerTwoScore += count;
+                if(EndGame())
+                {
+                    new JOptionPane().createDialog("game ended: player One Score: " + playerOneScore + " player Two Score: " + playerTwoScore);
                 }
+                if(count == 0)
+                    turn = 3 - turn;
+                System.out.println("player " + turn + " turn");
+
+
+
+                
+
+
             }
 
         }
