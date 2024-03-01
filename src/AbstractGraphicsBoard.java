@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 public abstract class AbstractGraphicsBoard extends JPanel {
     protected short[][] logicalBoard;
     protected SButton[][]  Gboard;
-    private  int board_size;
+    protected  int board_size;
     public State state;
     public  AbstractGraphicsBoard(int boardSize){
         this.board_size = boardSize;

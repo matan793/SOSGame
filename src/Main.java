@@ -13,7 +13,7 @@ public class Main extends JFrame {
         setLocationRelativeTo(null);
         setSize(size * 100, size * 100);
         setLayout(new BorderLayout());
-        PVP p = new PVP(8);
+        PVE p = new PVE(8, DifficultyLevel.Easy);
         add(p, BorderLayout.CENTER);
         add(new InputOutputPanel(p), BorderLayout.NORTH);
         //add(new ScorePanel(), BorderLayout.WEST);

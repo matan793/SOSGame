@@ -53,7 +53,7 @@ public class PVP extends AbstractGraphicsBoard{
                     playerTwoScore += count;
                 if(EndGame())
                 {
-                    new JOptionPane().createDialog("game ended: player One Score: " + playerOneScore + " player Two Score: " + playerTwoScore);
+                    System.out.println("player one: " + playerOneScore + " player two: " + playerTwoScore);
                 }
                 if(count == 0)
                     turn = 3 - turn;
