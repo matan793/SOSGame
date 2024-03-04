@@ -41,6 +41,7 @@ public class PVE extends AbstractGraphicsBoard {
             if(played)
                 return;
             SButton s = (SButton) e.getSource();
+            int sosCount = 0;
             if (logicalBoard[s.row][s.col] == 0) {
                 Color turnColor = Color.BLUE;
                 if (state == State.S) {
@@ -49,28 +50,32 @@ public class PVE extends AbstractGraphicsBoard {
                     ImageIcon icon = new ImageIcon("src/images/s.png");
                     Image img = icon.getImage();
                     Gboard[s.row][s.col].setImg(img);
-                    playerScore += CheckSos(s.row, s.col, turnColor);
+                    sosCount = CheckSos(s.row, s.col, turnColor);
                 } else if (state == State.O) {
                     logicalBoard[s.row][s.col] = (short) 2;
                     computerBoard[s.row][s.col] = (short) 2;
                     ImageIcon icon = new ImageIcon("src/images/o.png");
                     Image img = icon.getImage();
                     Gboard[s.row][s.col].setImg(img);
-                    playerScore += CheckSos(s.row, s.col, turnColor);
+                    sosCount = CheckSos(s.row, s.col, turnColor);
                 }
+
                 played = true;
-                Thread thread = new Thread(() -> {
-                    try {
-                        Thread.sleep(1500); // Wait for one second
-                        // Call your function here
-                        ComputerMove();
+                playerScore += sosCount;
+                if (sosCount == 0) {
+                    Thread thread = new Thread(() -> {
+                        try {
+                            Thread.sleep(1500); // Wait for one second
+                            // Call your function here
+                            ComputerMove();
 
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
-                });
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
 
-                thread.start();
+                    thread.start();
+                }
             }
         }
 
@@ -104,45 +109,49 @@ public class PVE extends AbstractGraphicsBoard {
             System.out.println("PVE.ComputerMove Medium");
             int max = -1, choice = 0;
             short[] maxIndecies = new short[2];
-            for (int i = 0; i < computerBoard.length; i++) {
-                for (int j = 0; j < computerBoard[i].length; j++) {
-                    if(computerBoard[i][j] == 0){
-                        computerBoard[i][j] = 1;
-                        int sosCount =  CheckSosComputer((short) i, (short) j);
-                        if(sosCount > max) {
-                            maxIndecies[0] = (short) i;
-                            maxIndecies[1]= (short) j;
-                            max = sosCount;
-                            choice = 1;
+            while(max == -1 || max > 0)
+            {
+                for (int i = 0; i < computerBoard.length; i++) {
+                    for (int j = 0; j < computerBoard[i].length; j++) {
+                        if(computerBoard[i][j] == 0){
+                            computerBoard[i][j] = 1;
+                            int sosCount =  CheckSosComputer((short) i, (short) j);
+                            if(sosCount > max) {
+                                maxIndecies[0] = (short) i;
+                                maxIndecies[1]= (short) j;
+                                max = sosCount;
+                                choice = 1;
+                            }
+                            computerBoard[i][j] = 0;
                         }
-                        computerBoard[i][j] = 0;
                     }
                 }
-            }
 
-            for (int i = 0; i < computerBoard.length; i++) {
-                for (int j = 0; j < computerBoard[i].length; j++) {
-                    if(computerBoard[i][j] == 0){
-                        computerBoard[i][j] = 2;
-                        int sosCount =  CheckSosComputer((short) i, (short) j);
-                        if(sosCount > max) {
-                            maxIndecies[0] = (short) i;
-                            maxIndecies[1]= (short) j;
-                            max = sosCount;
-                            choice = 2;
+                for (int i = 0; i < computerBoard.length; i++) {
+                    for (int j = 0; j < computerBoard[i].length; j++) {
+                        if(computerBoard[i][j] == 0){
+                            computerBoard[i][j] = 2;
+                            int sosCount =  CheckSosComputer((short) i, (short) j);
+                            if(sosCount > max) {
+                                maxIndecies[0] = (short) i;
+                                maxIndecies[1]= (short) j;
+                                max = sosCount;
+                                choice = 2;
+                            }
+                            computerBoard[i][j] = 0;
                         }
-                        computerBoard[i][j] = 0;
                     }
                 }
+                logicalBoard[maxIndecies[0]][maxIndecies[1]] = (short) choice;
+                computerBoard[maxIndecies[0]][maxIndecies[1]] = (short) choice;
+                ImageIcon icon = new ImageIcon(choice == 1 ? "src/images/s.png" : "src/images/o.png");
+                Image img = icon.getImage();
+                Gboard[maxIndecies[0]][maxIndecies[1]].setImg(img);
+                CheckSos(maxIndecies[0], maxIndecies[1], Color.red);
+                computerScore += max;
+                System.out.printf("choice: %d, max Indecies[%d, %d], count: %d", choice, maxIndecies[0], maxIndecies[1], max);
+
             }
-            logicalBoard[maxIndecies[0]][maxIndecies[1]] = (short) choice;
-            computerBoard[maxIndecies[0]][maxIndecies[1]] = (short) choice;
-            ImageIcon icon = new ImageIcon(choice == 1 ? "src/images/s.png" : "src/images/o.png");
-            Image img = icon.getImage();
-            Gboard[maxIndecies[0]][maxIndecies[1]].setImg(img);
-            CheckSos(maxIndecies[0], maxIndecies[1], Color.red);
-            computerScore += max;
-            System.out.printf("choice: %d, max Indecies[%d, %d], count: %d", choice, maxIndecies[0], maxIndecies[1], max);
 
 
         }
