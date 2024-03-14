@@ -1,20 +1,22 @@
-import javax.crypto.IllegalBlockSizeException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class PVE extends AbstractGraphicsBoard {
     private int playerScore;
     private int computerScore;
     private short[][] computerBoard;
+    private ArrayList<Move> moves;
     private boolean played = false;
-    private DifficultyLevel difficultyLevel;
-    public PVE(int bsize, DifficultyLevel difficultyLevel) {
+    private Algorithm difficultyLevel;
+    public PVE(int bsize, Algorithm difficultyLevel) {
         super(bsize);
         this.playerScore = 0;
         this.computerScore = 0;
+        this.moves = new ArrayList<>(bsize * bsize);
         this.computerBoard = new short[board_size][board_size];
         this.difficultyLevel = difficultyLevel;
         for (int i = 0; i < Gboard.length; i++) {
@@ -22,6 +24,7 @@ public class PVE extends AbstractGraphicsBoard {
                 Gboard[i][j].addActionListener(new AL());
             }
         }
+
     }
 
     @Override
@@ -51,6 +54,8 @@ public class PVE extends AbstractGraphicsBoard {
                     Image img = icon.getImage();
                     Gboard[s.row][s.col].setImg(img);
                     sosCount = CheckSos(s.row, s.col, turnColor);
+
+                    moves.add(new Move(s.row, s.col, State.S));
                 } else if (state == State.O) {
                     logicalBoard[s.row][s.col] = (short) 2;
                     computerBoard[s.row][s.col] = (short) 2;
@@ -58,16 +63,20 @@ public class PVE extends AbstractGraphicsBoard {
                     Image img = icon.getImage();
                     Gboard[s.row][s.col].setImg(img);
                     sosCount = CheckSos(s.row, s.col, turnColor);
+
+                    moves.add(new Move(s.row, s.col, State.O));
+
                 }
 
-                played = true;
+
                 playerScore += sosCount;
                 if (sosCount == 0) {
+                    played = true;
                     Thread thread = new Thread(() -> {
                         try {
-                            Thread.sleep(1500); // Wait for one second
-                            // Call your function here
-                            ComputerMove();
+                            do {
+                                Thread.sleep(1500);
+                            }while (ComputerMove());
 
                         } catch (InterruptedException ex) {
                             ex.printStackTrace();
@@ -82,8 +91,8 @@ public class PVE extends AbstractGraphicsBoard {
 
 
     }
-    private void ComputerMove(){
-        if(difficultyLevel == DifficultyLevel.Easy)
+    private boolean ComputerMove(){
+        if(difficultyLevel == Algorithm.Random)
         {
             Random rnd  = new Random();
             while (true)
@@ -92,70 +101,66 @@ public class PVE extends AbstractGraphicsBoard {
                 int j = rnd.nextInt(board_size);
                 if(logicalBoard[i][j] == 0)
                 {
+                    int sosCount = 0;
                     int choice = rnd.nextInt(2) + 1;
                     logicalBoard[i][j] = (short) choice;
                     ImageIcon icon = new ImageIcon(choice == 1 ? "src/images/s.png" : "src/images/o.png");
                     Image img = icon.getImage();
                     Gboard[i][j].setImg(img);
-                    computerScore += CheckSos((short) i, (short) j, Color.red);
-                    break;
+                    sosCount = CheckSos((short) i, (short) j, Color.red);
+                    if(sosCount > 0)
+                        return true;
+
                 }
             }
 
 
         }
-        else if(difficultyLevel == DifficultyLevel.Medium)
-        {
-            System.out.println("PVE.ComputerMove Medium");
-            int max = -1, choice = 0;
-            short[] maxIndecies = new short[2];
-            while(max == -1 || max > 0)
-            {
-                for (int i = 0; i < computerBoard.length; i++) {
-                    for (int j = 0; j < computerBoard[i].length; j++) {
-                        if(computerBoard[i][j] == 0){
-                            computerBoard[i][j] = 1;
-                            int sosCount =  CheckSosComputer((short) i, (short) j);
-                            if(sosCount > max) {
-                                maxIndecies[0] = (short) i;
-                                maxIndecies[1]= (short) j;
-                                max = sosCount;
-                                choice = 1;
-                            }
-                            computerBoard[i][j] = 0;
+        else if(difficultyLevel == Algorithm.Memory)
+        {        played = false;
+
+            boolean flag = false;
+            for (int i = 0; i < moves.size() && !flag; i++) {
+                if(moves.get(i).state == State.S && logicalBoard[moves.get(i).i][moves.get(i).j+2] == 1)
+                {
+                    logicalBoard[moves.get(i).i][moves.get(i).j] = (short) 2;
+                    computerBoard[moves.get(i).i][moves.get(i).j] = (short) 2;
+                    ImageIcon icon = new ImageIcon("src/images/o.png");
+                    Image img = icon.getImage();
+                    Gboard[moves.get(i).i][moves.get(i).j].setImg(img);
+                    computerScore +=  CheckSos((short) moves.get(i).i, (short) moves.get(i).j, Color.red);
+                    flag = true;
+                    return true;
+                }
+                if(!flag)
+                {
+                    Random rnd  = new Random();
+                    while (true)
+                    {
+                        int m = rnd.nextInt(board_size);
+                        int j = rnd.nextInt(board_size);
+                        if(logicalBoard[m][j] == 0)
+                        {
+                            int sosCount = 0;
+                            int choice = rnd.nextInt(2) + 1;
+                            logicalBoard[m][j] = (short) choice;
+                            ImageIcon icon = new ImageIcon(choice == 1 ? "src/images/s.png" : "src/images/o.png");
+                            Image img = icon.getImage();
+                            Gboard[m][j].setImg(img);
+                            sosCount = CheckSos((short) m, (short) j, Color.red);
+                            if(sosCount > 0)
+                                return true;
+                            return false;
+
                         }
                     }
                 }
-
-                for (int i = 0; i < computerBoard.length; i++) {
-                    for (int j = 0; j < computerBoard[i].length; j++) {
-                        if(computerBoard[i][j] == 0){
-                            computerBoard[i][j] = 2;
-                            int sosCount =  CheckSosComputer((short) i, (short) j);
-                            if(sosCount > max) {
-                                maxIndecies[0] = (short) i;
-                                maxIndecies[1]= (short) j;
-                                max = sosCount;
-                                choice = 2;
-                            }
-                            computerBoard[i][j] = 0;
-                        }
-                    }
-                }
-                logicalBoard[maxIndecies[0]][maxIndecies[1]] = (short) choice;
-                computerBoard[maxIndecies[0]][maxIndecies[1]] = (short) choice;
-                ImageIcon icon = new ImageIcon(choice == 1 ? "src/images/s.png" : "src/images/o.png");
-                Image img = icon.getImage();
-                Gboard[maxIndecies[0]][maxIndecies[1]].setImg(img);
-                CheckSos(maxIndecies[0], maxIndecies[1], Color.red);
-                computerScore += max;
-                System.out.printf("choice: %d, max Indecies[%d, %d], count: %d", choice, maxIndecies[0], maxIndecies[1], max);
-
             }
 
-
         }
+
         played = false;
+        return false;
     }
     protected int CheckSosComputer(short row, short colum)
     {
