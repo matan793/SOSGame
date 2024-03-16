@@ -25,6 +25,23 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         }
 
     }
+    protected  void MarkButton(int row, int colum, State letter)
+    {
+        if (letter == State.S) {
+            logicalBoard[row][colum] = (short) 1;
+            ImageIcon icon = new ImageIcon("src/images/s.png");
+            Image img = icon.getImage();
+            Gboard[row][colum].setImg(img);
+
+        } else if (letter == State.O) {
+            logicalBoard[row][colum] = (short) 2;
+            ImageIcon icon = new ImageIcon("src/images/o.png");
+            Image img = icon.getImage();
+            Gboard[row][colum].setImg(img);
+
+        }
+    }
+
     protected int CheckSos(short row, short colum, Color lineColor)
     {
         int sosCount = 0;
