@@ -10,4 +10,10 @@ public class Move {
         this.j = j;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Move))
+            return false;
+        return ((Move) obj).i == this.i && ((Move) obj).j == this.j;
+    }
 }
