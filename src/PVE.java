@@ -13,6 +13,7 @@ public class PVE extends AbstractGraphicsBoard {
     private Stack<Move> moves;
     private boolean played = false;
     private Algorithm difficultyLevel;
+    int debugCounter = 0;
     public PVE(int bsize, Algorithm difficultyLevel) {
         super(bsize);
         this.playerScore = 0;
@@ -60,7 +61,6 @@ public class PVE extends AbstractGraphicsBoard {
 //                    moves.push(new Move(s.row, s.col, State.O));
 //                }
                 markButton(s.row, s.col, state);
-                moves.push(new Move(s.row, s.col, State.O));  
 
                 int sosCount = CheckSos(s.row, s.col, Color.BLUE);
                 playerScore += sosCount;
@@ -172,7 +172,29 @@ public class PVE extends AbstractGraphicsBoard {
         }
         return sosCount;
     }
+    private int RandomMove() {
+        Random rnd = new Random();
+        boolean found = false;
+        while (!found) {
+
+            int i = rnd.nextInt(board_size);
+            int j = rnd.nextInt(board_size);
+            if (logicalBoard[i][j] == 0) {
+                played = false;
+                found = true;
+                int choice = rnd.nextInt(2) + 1;
+                markButton(i, j, State.values()[choice - 1]);
+                return CheckSos((short) i, (short) j, Color.red);
+
+
+            }
+        }
+        return 0;
+    }
     private boolean ComputerMove(){
+        debugCounter++;
+        if(debugCounter == 2)
+            System.out.println("mirav my wife");
         if(difficultyLevel == Algorithm.Random)
         {
 
@@ -181,27 +203,9 @@ public class PVE extends AbstractGraphicsBoard {
                     int sosCount = 0;
                     do {
                         Thread.sleep(1500);
-                        Random rnd  = new Random();
-                        boolean found = false;
-                        while (!found)
-                        {
-
-                            int i = rnd.nextInt(board_size);
-                            int j = rnd.nextInt(board_size);
-                            if(logicalBoard[i][j] == 0)
-                            {
-                                played = false;
-                                found = true;
-                                sosCount = 0;
-                                int choice = rnd.nextInt(2) + 1;
-                                moves.push(new Move(i, j, State.values()[choice-1]));
-                                markButton(i, j, State.values()[choice - 1]);
-                                sosCount = CheckSos((short) i, (short) j, Color.red);
 
 
-                            }
-                        }
-                    }while (sosCount > 0);
+                    }while (RandomMove() > 0);
 
 
 
@@ -223,75 +227,100 @@ public class PVE extends AbstractGraphicsBoard {
                 Move lastMove = moves.peek();
                 int max = 0;
                 int[] maxIndecies = new int[2];
-                for (int i = 1; i <= board_size ; i++) {
+                State maxState = State.S; //just initializing
+                for (int i= 1; i <= board_size && max < 2; i++) {
                      int starti = Math.max((lastMove.i - i), 0);
                      int startj = Math.max((lastMove.j - i), 0);
-                     int endi = Math.min((lastMove.i + i), board_size);
-                     int endj = Math.min((lastMove.j + i), board_size);
-                    for (int j = startj; j < endj; j++) {
-                      //  if((moves.peek().j == j && moves.peek().i == starti) || (moves.peek().j == j && moves.peek().i == endi))
+                     int endi = Math.min((lastMove.i + i), board_size -1);
+                     int endj = Math.min((lastMove.j + i), board_size -1);
+                     for (int j = startj; j <= endj && j < board_size; j++) {
+
+
                         int tmp = evaluateBoardForO(starti, j);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[starti][j] == 0 && (moves.peek().j == j && moves.peek().i == starti))
                         {
                             max = tmp;
                             maxIndecies[0] = starti;
                             maxIndecies[1] = j;
+                            maxState = State.O;
                         }
                         tmp = evaluateBoardForS(starti, j);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[starti][j] == 0 && (moves.peek().j == j && moves.peek().i == starti))
                         {
                             max = tmp;
                             maxIndecies[0] = starti;
                             maxIndecies[1] = j;
+                            maxState = State.S;
+
                         }
                         tmp = evaluateBoardForO(endi, j);
-                        if(tmp > max)
+                        if(tmp > max  && logicalBoard[endi][j] == 0 && (moves.peek().j == j && moves.peek().i == endi))
                         {
                             max = tmp;
                             maxIndecies[0] = endi;
                             maxIndecies[1] = j;
+                            maxState = State.O;
+
                         }
                         tmp = evaluateBoardForS(endi, j);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[endi][j] == 0 && (moves.peek().j == j && moves.peek().i == endi))
                         {
                             max = tmp;
                             maxIndecies[0] = endi;
                             maxIndecies[1] = j;
+                            maxState = State.S;
+
                         }
                     }
 
-                    for (int j = starti + 1; j < endi - 1; j++) {
+                    for (int j = starti + 1; j <= endi && j < board_size; j++) {
                         int tmp = evaluateBoardForO(j, startj);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[j][startj] == 0 && (moves.peek().i == j && moves.peek().j == startj))
                         {
                             max = tmp;
                             maxIndecies[0] = starti;
                             maxIndecies[1] = j;
+                            maxState = State.O;
+
                         }
                         tmp = evaluateBoardForS(j, startj);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[j][startj] == 0 && (moves.peek().i == j && moves.peek().j == startj))
                         {
                             max = tmp;
                             maxIndecies[0] = starti;
                             maxIndecies[1] = j;
+                            maxState = State.S;
+
                         }
                         tmp = evaluateBoardForO(j, endj);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[j][endj] == 0 && (moves.peek().i == j && moves.peek().j == endj))
                         {
                             max = tmp;
                             maxIndecies[0] = endi;
                             maxIndecies[1] = j;
+                            maxState = State.O;
+
                         }
                         tmp = evaluateBoardForS(j, endj);
-                        if(tmp > max)
+                        if(tmp > max && logicalBoard[j][endj] == 0 && (moves.peek().i == j && moves.peek().j == endj))
                         {
                             max = tmp;
                             maxIndecies[0] = endi;
                             maxIndecies[1] = j;
+                            maxState = State.S;
+
                         }
                     }
-                    soscount = max;
+
                 }
+                if(max == 0)
+                    max = RandomMove();
+                else {
+                    markButton(maxIndecies[0], maxIndecies[1], maxState);
+                    computerScore+= CheckSos((short) maxIndecies[0], (short) maxIndecies[1], Color.RED);
+                }
+                soscount = max;
+
 
 
             }while (soscount > 0);
@@ -305,6 +334,7 @@ public class PVE extends AbstractGraphicsBoard {
     public void markButton(int row, int col, State s) {
         super.markButton(row, col, s);
         computerBoard[row][col] = (short) (s == State.S ? 1 : 2);
+        moves.push(new Move(row, col, s));
 
     }
 
