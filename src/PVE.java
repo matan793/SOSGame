@@ -172,6 +172,16 @@ public class PVE extends AbstractGraphicsBoard {
         }
         return sosCount;
     }
+    private boolean isGoodForPlacingS(int row, int colm)
+    {
+
+        return true;
+    }
+    private boolean isGoodForPlacingO(int row, int colm)
+    {
+
+        return true;
+    }
     private int RandomMove() {
         Random rnd = new Random();
         boolean found = false;
@@ -190,6 +200,106 @@ public class PVE extends AbstractGraphicsBoard {
             }
         }
         return 0;
+    }
+    private int ExpandingMove()
+    {
+        Move lastMove = moves.peek();
+        int max = 0;
+        int[] maxIndecies = new int[2];
+        State maxState = State.S; //just initializing
+        for (int i= 1; i <= board_size && max < 2; i++) {
+            int starti = Math.max((lastMove.i - i), 0);
+            int startj = Math.max((lastMove.j - i), 0);
+            int endi = Math.min((lastMove.i + i), board_size -1);
+            int endj = Math.min((lastMove.j + i), board_size -1);
+            for (int j = startj; j <= endj && j < board_size; j++) {
+
+
+                int tmp = evaluateBoardForO(starti, j);
+
+                if(tmp > max && logicalBoard[starti][j] == 0 && !(moves.peek().j == j && moves.peek().i == starti))
+                {
+                    max = tmp;
+                    maxIndecies[0] = starti;
+                    maxIndecies[1] = j;
+                    maxState = State.O;
+                }
+                tmp = evaluateBoardForS(starti, j);
+                if(tmp > max && logicalBoard[starti][j] == 0 && !(moves.peek().j == j && moves.peek().i == starti))
+                {
+                    max = tmp;
+                    maxIndecies[0] = starti;
+                    maxIndecies[1] = j;
+                    maxState = State.S;
+
+                }
+                tmp = evaluateBoardForO(endi, j);
+                if(tmp > max  && logicalBoard[endi][j] == 0 && !(moves.peek().j == j && moves.peek().i == endi))
+                {
+                    max = tmp;
+                    maxIndecies[0] = endi;
+                    maxIndecies[1] = j;
+                    maxState = State.O;
+
+                }
+                tmp = evaluateBoardForS(endi, j);
+                if(tmp > max && logicalBoard[endi][j] == 0 && !(moves.peek().j == j && moves.peek().i == endi))
+                {
+                    max = tmp;
+                    maxIndecies[0] = endi;
+                    maxIndecies[1] = j;
+                    maxState = State.S;
+
+                }
+            }
+
+            for (int j = starti + 1; j <= endi && j < board_size; j++) {
+                int tmp = evaluateBoardForO(j, startj);
+                if(tmp > max && logicalBoard[j][startj] == 0 && !(moves.peek().i == j && moves.peek().j == startj))
+                {
+                    max = tmp;
+                    maxIndecies[0] = starti;
+                    maxIndecies[1] = j;
+                    maxState = State.O;
+
+                }
+                tmp = evaluateBoardForS(j, startj);
+                if(tmp > max && logicalBoard[j][startj] == 0 && !(moves.peek().i == j && moves.peek().j == startj))
+                {
+                    max = tmp;
+                    maxIndecies[0] = starti;
+                    maxIndecies[1] = j;
+                    maxState = State.S;
+
+                }
+                tmp = evaluateBoardForO(j, endj);
+                if(tmp > max && logicalBoard[j][endj] == 0 && !(moves.peek().i == j && moves.peek().j == endj))
+                {
+                    max = tmp;
+                    maxIndecies[0] = endi;
+                    maxIndecies[1] = j;
+                    maxState = State.O;
+
+                }
+                tmp = evaluateBoardForS(j, endj);
+                if(tmp > max && logicalBoard[j][endj] == 0 && !(moves.peek().i == j && moves.peek().j == endj))
+                {
+                    max = tmp;
+                    maxIndecies[0] = endi;
+                    maxIndecies[1] = j;
+                    maxState = State.S;
+
+                }
+            }
+
+        }
+        if(max == 0)
+            max = RandomMove();
+        else {
+            markButton(maxIndecies[0], maxIndecies[1], maxState);
+            computerScore+= CheckSos((short) maxIndecies[0], (short) maxIndecies[1], Color.RED);
+        }
+        return max;
     }
     private boolean ComputerMove(){
         debugCounter++;
@@ -221,109 +331,26 @@ public class PVE extends AbstractGraphicsBoard {
         }
         else if(difficultyLevel == Algorithm.Memory)
         {
-            played = false;
-            int soscount = 0;
-            do {
-                Move lastMove = moves.peek();
-                int max = 0;
-                int[] maxIndecies = new int[2];
-                State maxState = State.S; //just initializing
-                for (int i= 1; i <= board_size && max < 2; i++) {
-                     int starti = Math.max((lastMove.i - i), 0);
-                     int startj = Math.max((lastMove.j - i), 0);
-                     int endi = Math.min((lastMove.i + i), board_size -1);
-                     int endj = Math.min((lastMove.j + i), board_size -1);
-                     for (int j = startj; j <= endj && j < board_size; j++) {
 
 
-                        int tmp = evaluateBoardForO(starti, j);
-                        if(tmp > max && logicalBoard[starti][j] == 0 && (moves.peek().j == j && moves.peek().i == starti))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = starti;
-                            maxIndecies[1] = j;
-                            maxState = State.O;
-                        }
-                        tmp = evaluateBoardForS(starti, j);
-                        if(tmp > max && logicalBoard[starti][j] == 0 && (moves.peek().j == j && moves.peek().i == starti))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = starti;
-                            maxIndecies[1] = j;
-                            maxState = State.S;
+            Thread thread = new Thread(() ->{
+                try {
 
-                        }
-                        tmp = evaluateBoardForO(endi, j);
-                        if(tmp > max  && logicalBoard[endi][j] == 0 && (moves.peek().j == j && moves.peek().i == endi))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = endi;
-                            maxIndecies[1] = j;
-                            maxState = State.O;
+                    do {
+                        Thread.sleep(1500);
 
-                        }
-                        tmp = evaluateBoardForS(endi, j);
-                        if(tmp > max && logicalBoard[endi][j] == 0 && (moves.peek().j == j && moves.peek().i == endi))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = endi;
-                            maxIndecies[1] = j;
-                            maxState = State.S;
 
-                        }
-                    }
+                    }while (ExpandingMove() > 0);
+                    played = false;
 
-                    for (int j = starti + 1; j <= endi && j < board_size; j++) {
-                        int tmp = evaluateBoardForO(j, startj);
-                        if(tmp > max && logicalBoard[j][startj] == 0 && (moves.peek().i == j && moves.peek().j == startj))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = starti;
-                            maxIndecies[1] = j;
-                            maxState = State.O;
 
-                        }
-                        tmp = evaluateBoardForS(j, startj);
-                        if(tmp > max && logicalBoard[j][startj] == 0 && (moves.peek().i == j && moves.peek().j == startj))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = starti;
-                            maxIndecies[1] = j;
-                            maxState = State.S;
-
-                        }
-                        tmp = evaluateBoardForO(j, endj);
-                        if(tmp > max && logicalBoard[j][endj] == 0 && (moves.peek().i == j && moves.peek().j == endj))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = endi;
-                            maxIndecies[1] = j;
-                            maxState = State.O;
-
-                        }
-                        tmp = evaluateBoardForS(j, endj);
-                        if(tmp > max && logicalBoard[j][endj] == 0 && (moves.peek().i == j && moves.peek().j == endj))
-                        {
-                            max = tmp;
-                            maxIndecies[0] = endi;
-                            maxIndecies[1] = j;
-                            maxState = State.S;
-
-                        }
-                    }
+                }catch (InterruptedException ex)
+                {
 
                 }
-                if(max == 0)
-                    max = RandomMove();
-                else {
-                    markButton(maxIndecies[0], maxIndecies[1], maxState);
-                    computerScore+= CheckSos((short) maxIndecies[0], (short) maxIndecies[1], Color.RED);
-                }
-                soscount = max;
 
-
-
-            }while (soscount > 0);
+            });
+            thread.start();
         }
 
         //played = false;

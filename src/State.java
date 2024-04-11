@@ -1,4 +1,5 @@
 public enum State {
     S,
-    O
+    O,
+    None
 }
