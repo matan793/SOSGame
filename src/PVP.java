@@ -33,35 +33,34 @@ public class PVP extends AbstractGraphicsBoard{
             if (logicalBoard[s.row][s.col] == 0) {
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
 
-                if (state == State.S) {
-                    logicalBoard[s.row][s.col] = (short) 1;
-                    ImageIcon icon = new ImageIcon("src/images/s.png");
-                    Image img = icon.getImage();
-                    Gboard[s.row][s.col].setImg(img);
-                    count = CheckSos(s.row, s.col, turnColor);
-                } else if (state == State.O) {
-                    logicalBoard[s.row][s.col] = (short) 2;
-                    ImageIcon icon = new ImageIcon("src/images/o.png");
-                    Image img = icon.getImage();
-                    Gboard[s.row][s.col].setImg(img);
-                    count = CheckSos(s.row, s.col, turnColor);
-                }
-
+//                if (state == State.S) {
+//                    logicalBoard[s.row][s.col] = (short) 1;
+//                    ImageIcon icon = new ImageIcon("src/images/s.png");
+//                    Image img = icon.getImage();
+//                    Gboard[s.row][s.col].setImg(img);
+//                    count = CheckSos(s.row, s.col, turnColor);
+//                } else if (state == State.O) {
+//                    logicalBoard[s.row][s.col] = (short) 2;
+//                    ImageIcon icon = new ImageIcon("src/images/o.png");
+//                    Image img = icon.getImage();
+//                    Gboard[s.row][s.col].setImg(img);
+//                    count = CheckSos(s.row, s.col, turnColor);
+//                }
+                markButton(s.row, s.col, state);
+                count = CheckSos(s.row, s.col, turnColor);
                 if(turn == 1)
                     playerOneScore += count;
                 else
                     playerTwoScore += count;
-                if(EndGame())
-                {
-                    System.out.println("player one: " + playerOneScore + " player two: " + playerTwoScore);
-                }
+                if(boardFull())
+                    endGame();
                 if(count == 0)
                     turn = 3 - turn;
                 System.out.println("player " + turn + " turn");
 
 
 
-                
+
 
 
             }
@@ -70,6 +69,12 @@ public class PVP extends AbstractGraphicsBoard{
     }
 
 
+    @Override
+    protected void endGame() {
+        JOptionPane.showMessageDialog(this, "game ended the player number " +
+                (playerOneScore > playerTwoScore ? "1" : (playerTwoScore == playerOneScore ? "1 and 2, its a tie" : "2")) + " won with a score of: "+
+                (playerOneScore >= playerTwoScore ? playerOneScore : playerTwoScore));
+    }
 
     @Override
     public void undoMove() {

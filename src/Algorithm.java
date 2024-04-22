@@ -1,5 +1,5 @@
 public enum Algorithm {
     Random,
-    Memory,
-    Hard
+    Expanding,
+    Area
 }

@@ -61,9 +61,10 @@ public class PVE extends AbstractGraphicsBoard {
 //                    moves.push(new Move(s.row, s.col, State.O));
 //                }
                 markButton(s.row, s.col, state);
-
                 int sosCount = CheckSos(s.row, s.col, Color.BLUE);
                 playerScore += sosCount;
+                if(boardFull())
+                    endGame();
                 if (sosCount == 0) {
                     played = true;
 //                    Thread thread = new Thread(() -> {
@@ -173,12 +174,23 @@ public class PVE extends AbstractGraphicsBoard {
         return sosCount;
     }
     private boolean isGoodForPlacingS(int row, int colm)
-    {
+    {  
 
         return true;
     }
-    private boolean isGoodForPlacingO(int row, int colm)
+    private boolean isGoodForPlacingO(int row, int colum)
     {
+        for (int i = (row==0 ? 0 : row - 1); i <= (row == board_size - 1 ? row : row + 1); i++)
+        {
+            for (int j = (colum==0 ? 0 : colum - 1); j <= (colum == board_size - 1 ? colum : colum + 1); j++)
+            {
+                if(i != row || j != colum)
+                {
+                    if(logicalBoard[i][j] == 2)
+                        return false;
+                }
+            }
+        }
 
         return true;
     }
@@ -313,7 +325,8 @@ public class PVE extends AbstractGraphicsBoard {
                     int sosCount = 0;
                     do {
                         Thread.sleep(1500);
-
+                        if(boardFull())
+                            endGame();
 
                     }while (RandomMove() > 0);
 
@@ -329,7 +342,7 @@ public class PVE extends AbstractGraphicsBoard {
 
 
         }
-        else if(difficultyLevel == Algorithm.Memory)
+        else if(difficultyLevel == Algorithm.Expanding)
         {
 
 
@@ -338,9 +351,32 @@ public class PVE extends AbstractGraphicsBoard {
 
                     do {
                         Thread.sleep(1500);
-
+                        if(boardFull())
+                            endGame();
 
                     }while (ExpandingMove() > 0);
+                    played = false;
+
+
+                }catch (InterruptedException ex)
+                {
+
+                }
+
+            });
+            thread.start();
+        }
+        else if(difficultyLevel == Algorithm.Area)
+        {
+            Thread thread = new Thread(() ->{
+                try {
+
+                    do {
+                        Thread.sleep(1500);
+                        if(boardFull())
+                            endGame();
+
+                    }while (AreaMove() > 0);
                     played = false;
 
 
@@ -355,6 +391,20 @@ public class PVE extends AbstractGraphicsBoard {
 
         //played = false;
         return false;
+    }
+
+    private int AreaMove() {
+        int sosCount = 0;
+
+        return sosCount;
+    }
+
+    @Override
+    protected void endGame() {
+        JOptionPane.showMessageDialog(this, "game ended " +
+                (playerScore > computerScore ? "you won!" : (playerScore == computerScore ? "its a tie" : "computer won")) + " with a score of: "+
+                (playerScore >= computerScore ? playerScore : computerScore));
+        
     }
 
     @Override

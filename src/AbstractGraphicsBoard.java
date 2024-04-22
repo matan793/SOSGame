@@ -7,12 +7,14 @@ import java.awt.image.BufferedImage;
 public abstract class AbstractGraphicsBoard extends JPanel {
     protected short[][] logicalBoard;
     protected SButton[][]  Gboard;
+    protected int boardCounter;
     protected  int board_size;
     public State state;
     public  AbstractGraphicsBoard(int boardSize){
         this.board_size = boardSize;
         this.logicalBoard = new short[boardSize][boardSize];
         this.Gboard = new SButton[boardSize][boardSize];
+        this.boardCounter = 0;
         setLayout(new GridLayout(boardSize, boardSize));
         for (int i = 0; i < Gboard.length; i++) {
             for (int j = 0; j < Gboard[i].length; j++) {
@@ -31,7 +33,14 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         ImageIcon icon = new ImageIcon(s == State.S ? "src/images/s.png" : "src/images/o.png");
         Image img = icon.getImage();
         Gboard[row][col].setImg(img);
+        boardCounter++;
     }
+    protected boolean boardFull()
+    {
+        return boardCounter == board_size*board_size;
+    }
+
+
     protected int CheckSos(short row, short colum, Color lineColor)
     {
         int sosCount = 0;
@@ -161,16 +170,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         }
         return sosCount;
     }
-    public boolean EndGame()
-    {
-        for (int i = 0; i < logicalBoard.length; i++) {
-            for (int j = 0; j < logicalBoard[i].length; j++) {
-                if(logicalBoard[i][j] == 0)
-                    return false;
-            }
-        }
-        return true;
-    }
+
 
     public Point FindSquare(Point point) {
         int i = point.x * board_size;
@@ -210,5 +210,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     }
     public abstract void undoMove();
     public abstract  void redoMove();
+    protected abstract void endGame();
 
 }
