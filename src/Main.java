@@ -7,16 +7,18 @@ public class Main extends JFrame {
     public Main()
     {
 
-        int size = 10;
+        int size = 7;
         setTitle("Sos Game");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(size * 100, size * 100);
         setLayout(new BorderLayout());
-        PVE p = new PVE(size, Algorithm.Expanding);
+        EVE p = new EVE(size, Algorithm.Expanding, Algorithm.Random);
+        //PVP p = new PVP(7);
         add(p, BorderLayout.CENTER);
         add(new InputOutputPanel(p), BorderLayout.NORTH);
         //add(new ScorePanel(), BorderLayout.WEST);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 

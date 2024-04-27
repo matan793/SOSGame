@@ -30,7 +30,7 @@ public class PVP extends AbstractGraphicsBoard{
         public void actionPerformed(ActionEvent e) {
             SButton s = (SButton) e.getSource();
             int count = 0;
-            if (logicalBoard[s.row][s.col] == 0) {
+            if (bitBoard.checkCell(s.row, s.col) == 0) {
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
 
 //                if (state == State.S) {
@@ -57,7 +57,12 @@ public class PVP extends AbstractGraphicsBoard{
                 if(count == 0)
                     turn = 3 - turn;
                 System.out.println("player " + turn + " turn");
-
+                for (int i = 0; i < board_size; i++) {
+                    for (int j = 0; j < board_size; j++) {
+                        System.out.print(bitBoard.checkCell(i, j) + ",");
+                    }
+                    System.out.println();
+                }
 
 
 

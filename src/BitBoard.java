@@ -33,9 +33,10 @@ public class BitBoard {
         int pos = row * size + col;
         int index = pos / 64;
         int bitPosition = pos % 64;
-        return (sBoard[index] & (1L << bitPosition)) == 0 && (oBoard[index] & (1L << bitPosition)) == 0;
+        //return (sBoard[index] & (1L << bitPosition)) == 0 && (oBoard[index] & (1L << bitPosition)) == 0;
+        return checkCell(row, col) == 0;
     }
-    public State checkCell(int row, int col) {
+    public int checkCell(int row, int col) {
         int pos = row * size + col;
         int index = pos / 64;
         int bitPosition = pos % 64;
@@ -44,11 +45,11 @@ public class BitBoard {
         long oBit = oBoard[index] & (1L << bitPosition);
 
         if (sBit != 0) {
-            return State.S; // "S" found
+            return 1; // "S" found
         } else if (oBit != 0) {
-            return State.O; // "O" found
+            return 2; // "O" found
         } else {
-            return State.Empty; // Cell is empty
+            return 0; // Cell is empty
         }
     }
 }
