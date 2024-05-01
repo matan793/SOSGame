@@ -4,14 +4,19 @@ import java.util.Stack;
 
 public abstract class Entity extends AbstractGraphicsBoard {
     protected boolean played = false;
-    protected Stack<Move> moves;
-    protected int computerScore;
 
+    protected int computerScore;
+    Color color;
 
     public Entity(int boardSize) {
         super(boardSize);
         this.computerScore = 0;
         this.moves = new Stack<>();
+        this.color = Color.RED;
+    }
+    public void SetColor(Color color)
+    {
+        this.color = color;
     }
     protected int evaluateBoardForS(int row, int colum)
     {
@@ -131,7 +136,7 @@ public abstract class Entity extends AbstractGraphicsBoard {
                 found = true;
                 int choice = rnd.nextInt(2) + 1;
                 markButton(i, j, State.values()[choice - 1]);
-                return CheckSos((short) i, (short) j, Color.red);
+                return CheckSos((short) i, (short) j, color);
 
 
             }
@@ -161,7 +166,7 @@ public abstract class Entity extends AbstractGraphicsBoard {
             int endj = Math.min((lastMove.j + i), board_size -1);
             for (int j = startj; j <= endj && j < board_size; j++) {
                 int tmp = 0;
-                if(!moves.contains(new Move(starti, j, State.S)) && !moves.contains(new Move(starti, j, State.O)))
+                if(bitBoard.isEmpty(starti, j))
                 {
 
                     tmp = evaluateBoardForO(starti, j);
@@ -172,10 +177,6 @@ public abstract class Entity extends AbstractGraphicsBoard {
                         maxIndecies[0] = starti;
                         maxIndecies[1] = j;
                         maxState = State.O;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
                     }
                     tmp = evaluateBoardForS(starti, j);
                     if(tmp > max && !(moves.peek().j == j && moves.peek().i == starti))
@@ -184,14 +185,9 @@ public abstract class Entity extends AbstractGraphicsBoard {
                         maxIndecies[0] = starti;
                         maxIndecies[1] = j;
                         maxState = State.S;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
-
                     }
                 }
-                if(!moves.contains(new Move(endi, j, State.S)) && !moves.contains(new Move(endi, j, State.O)))
+                if(bitBoard.isEmpty(endi, j))
                 {
                     tmp = evaluateBoardForO(endi, j);
                     if(tmp > max && !(moves.peek().j == j && moves.peek().i == endi))
@@ -200,11 +196,6 @@ public abstract class Entity extends AbstractGraphicsBoard {
                         maxIndecies[0] = endi;
                         maxIndecies[1] = j;
                         maxState = State.O;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
-
                     }
                     tmp = evaluateBoardForS(endi, j);
                     if(tmp > max  && !(moves.peek().j == j && moves.peek().i == endi))
@@ -213,11 +204,6 @@ public abstract class Entity extends AbstractGraphicsBoard {
                         maxIndecies[0] = endi;
                         maxIndecies[1] = j;
                         maxState = State.S;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
-
                     }
                 }
 
@@ -226,58 +212,41 @@ public abstract class Entity extends AbstractGraphicsBoard {
             for (int j = starti + 1; j <= endi && j < board_size; j++) {
                 int tmp = 0;
 
-                if(!moves.contains(new Move(j, startj, State.S)) && !moves.contains(new Move(j, startj, State.O))){//
+                if(bitBoard.isEmpty(j, startj)){//
 
                     tmp = evaluateBoardForO(j, startj);
                     if(tmp > max && !(moves.peek().i == j && moves.peek().j == startj))
                     {
                         max = tmp;
                         maxIndecies[0] = j;
-                        maxIndecies[1] = starti;
+                        maxIndecies[1] = startj;
                         maxState = State.O;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
-
                     }
                     tmp = evaluateBoardForS(j, startj);
                     if(tmp > max && !(moves.peek().i == j && moves.peek().j == startj))//////
                     {
                         max = tmp;
                         maxIndecies[0] = j;
-                        maxIndecies[1] = starti;
+                        maxIndecies[1] = startj;
                         maxState = State.S;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
                     }
                 }
-                if(!moves.contains(new Move(j, endj, State.S)) && !moves.contains(new Move(j, endi, State.O))){
+                if(bitBoard.isEmpty(j, endj)){
                     tmp = evaluateBoardForO(j, endj);
                     if(tmp > max && !(moves.peek().i == j && moves.peek().j == endj))
                     {
                         max = tmp;
                         maxIndecies[0] = j;
-                        maxIndecies[1] = endi;
+                        maxIndecies[1] = endj;
                         maxState = State.O;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
                     }
                     tmp = evaluateBoardForS(j, endj);//
                     if(tmp > max && !(moves.peek().i == j && moves.peek().j == endj))
                     {
                         max = tmp;
                         maxIndecies[0] = j;
-                        maxIndecies[1] = endi;
+                        maxIndecies[1] = endj;
                         maxState = State.S;
-                        if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-                        {
-                            System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-                        }
                     }
                 }
 
@@ -287,13 +256,27 @@ public abstract class Entity extends AbstractGraphicsBoard {
         if(max == 0)
             max = RandomMove();
         else {
-            if(!bitBoard.isEmpty(maxIndecies[0], maxIndecies[1]))
-            {
-                System.out.println("max indecies: " + maxIndecies[0] + "," + maxIndecies[1] + "... cell is: " + bitBoard.checkCell(maxIndecies[0], maxIndecies[1]));
-            }
+
             markButton(maxIndecies[0], maxIndecies[1], maxState);
-            computerScore+= CheckSos((short) maxIndecies[0], (short) maxIndecies[1], Color.RED);
+            max = CheckSos((short) maxIndecies[0], (short) maxIndecies[1], color);
         }
         return max;
+    }
+    protected int AreaMove()
+    {
+        int sosCount = 0;
+        int size = 0;
+        if(board_size < 6)
+            size = 3;
+        else if (board_size < 9) {
+            size = board_size / 2;
+        }
+        else
+            size = board_size / 3;
+
+        for (int i = 0; i < 0; i++) {
+            
+        }
+        return sosCount;
     }
 }

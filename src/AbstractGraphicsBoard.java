@@ -3,12 +3,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Stack;
 
 public abstract class AbstractGraphicsBoard extends JPanel {
     protected SButton[][]  Gboard;
     protected int boardCounter;
     protected BitBoard bitBoard;
     protected  int board_size;
+    protected Stack<Move> moves;
     public State state;
     public  AbstractGraphicsBoard(int boardSize){
         this.board_size = boardSize;
@@ -38,6 +40,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         Image img = icon.getImage();
         Gboard[row][col].setImg(img);
         boardCounter++;
+        moves.push(new Move(row, col, s));
     }
     protected boolean boardFull()
     {

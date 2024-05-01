@@ -94,10 +94,12 @@ public class PVE extends Entity {
                     int sosCount = 0;
                     do {
                         Thread.sleep(1500);
+                        sosCount = RandomMove();
+                        computerScore += sosCount;
                         if(boardFull())
                             endGame();
 
-                    }while (RandomMove() > 0);
+                    }while (sosCount > 0);
 
 
 
@@ -117,13 +119,15 @@ public class PVE extends Entity {
 
             Thread thread = new Thread(() ->{
                 try {
-
+                    int sosCount = 0;
                     do {
                         Thread.sleep(1500);
+                        sosCount = ExpandingMove();
+                         computerScore += sosCount;
                         if(boardFull())
                             endGame();
 
-                    }while (ExpandingMove() > 0);
+                    }while (sosCount > 0);
                     played = false;
 
 
@@ -139,7 +143,7 @@ public class PVE extends Entity {
         {
             Thread thread = new Thread(() ->{
                 try {
-
+                    int sosCount = 0;
                     do {
                         Thread.sleep(1500);
                         if(boardFull())
@@ -162,11 +166,6 @@ public class PVE extends Entity {
         return false;
     }
 
-    private int AreaMove() {
-        int sosCount = 0;
-
-        return sosCount;
-    }
 
     @Override
     protected void endGame() {

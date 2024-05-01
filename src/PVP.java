@@ -32,20 +32,6 @@ public class PVP extends AbstractGraphicsBoard{
             int count = 0;
             if (bitBoard.checkCell(s.row, s.col) == 0) {
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
-
-//                if (state == State.S) {
-//                    logicalBoard[s.row][s.col] = (short) 1;
-//                    ImageIcon icon = new ImageIcon("src/images/s.png");
-//                    Image img = icon.getImage();
-//                    Gboard[s.row][s.col].setImg(img);
-//                    count = CheckSos(s.row, s.col, turnColor);
-//                } else if (state == State.O) {
-//                    logicalBoard[s.row][s.col] = (short) 2;
-//                    ImageIcon icon = new ImageIcon("src/images/o.png");
-//                    Image img = icon.getImage();
-//                    Gboard[s.row][s.col].setImg(img);
-//                    count = CheckSos(s.row, s.col, turnColor);
-//                }
                 markButton(s.row, s.col, state);
                 count = CheckSos(s.row, s.col, turnColor);
                 if(turn == 1)
@@ -83,7 +69,15 @@ public class PVP extends AbstractGraphicsBoard{
 
     @Override
     public void undoMove() {
+        int sosCount = CheckSos((short) moves.peek().i, (short) moves.peek().j, Color.red);
+        Move move = moves.pop();
+        ImageIcon icon = new ImageIcon("src/images/background.png");
+        Image img = icon.getImage();
+        Gboard[move.i][move.j].setImg(img);
+        for (int i = 1; i <= 2; i++) {
+            //Gboard[i]
 
+        }
     }
 
     @Override
