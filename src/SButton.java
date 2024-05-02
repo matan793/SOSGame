@@ -63,18 +63,19 @@ public class SButton extends JButton
         }
         if(linesArray[1] != null)
         {
+            //vertical
             g2d.setColor(linesArray[1]);
-
             g2d.drawLine(getWidth()/2, 0, getWidth()/2, getHeight());
         }
         if(linesArray[2] != null)
         {
+            //diagonal(bottom to top)
             g2d.setColor(linesArray[2]);
-
             g2d.drawLine(0, 0, getWidth(), getHeight());
         }
         if(linesArray[3] != null)
         {
+            //diagonal(top to bottom)
             g2d.setColor(linesArray[3]);
             g2d.drawLine(0, getHeight(), getWidth(), 0);
         }

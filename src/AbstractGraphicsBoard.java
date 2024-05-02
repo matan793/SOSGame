@@ -27,7 +27,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
             }
         }
         this.bitBoard = new BitBoard(boardSize);
-
+        this.moves = new Stack<>();
     }
     public void markButton(int row, int col, State s)
     {

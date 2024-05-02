@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -37,6 +39,15 @@ public class InputOutputPanel extends JPanel {
         bottomPanel.add(new JLabel("O:"));
         bottomPanel.add(oOption);
         add(bottomPanel);
+        JButton undo = new JButton("undo");
+        add(undo);
+        game.state = State.S;
+        undo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.undoMove();
+            }
+        });
         sOption.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {

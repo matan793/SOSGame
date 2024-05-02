@@ -11,7 +11,7 @@ public abstract class Entity extends AbstractGraphicsBoard {
     public Entity(int boardSize) {
         super(boardSize);
         this.computerScore = 0;
-        this.moves = new Stack<>();
+        //this.moves = new Stack<>();
         this.color = Color.RED;
     }
     public void SetColor(Color color)

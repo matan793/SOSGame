@@ -69,15 +69,43 @@ public class PVP extends AbstractGraphicsBoard{
 
     @Override
     public void undoMove() {
+        if(moves.isEmpty())
+            return;
         int sosCount = CheckSos((short) moves.peek().i, (short) moves.peek().j, Color.red);
         Move move = moves.pop();
         ImageIcon icon = new ImageIcon("src/images/background.png");
         Image img = icon.getImage();
         Gboard[move.i][move.j].setImg(img);
-        for (int i = 1; i <= 2; i++) {
-            //Gboard[i]
-
+        for (int i = 0; i < 4; i++) {
+            Gboard[move.i][move.i].linesArray[i] = null;
         }
+        if(move.j > 0)
+        {
+            Gboard[move.i][move.j-1].linesArray[0] = null;
+            if (move.i > 0)
+                Gboard[move.i-1][move.j-1].linesArray[2] = null;
+            if (move.i < board_size)
+                Gboard[move.i+1][move.j-1].linesArray[3] = null;
+        }
+        if(move.j < board_size)
+        {
+            Gboard[move.i][move.j+1].linesArray[0] = null;
+            if (move.i > 0)
+                Gboard[move.i-1][move.j+1].linesArray[3] = null;
+            if(move.i < board_size)
+                Gboard[move.i+1][move.j+1].linesArray[2] = null;
+        }
+        if(move.i > 0)
+            Gboard[move.i-1][move.j].linesArray[1] = null;
+        if(move.i < board_size)
+            Gboard[move.i+1][move.j].linesArray[1] = null;
+        bitBoard.removeSO(move.i, move.j);
+        if(turn == 1)
+            playerTwoScore -= sosCount;
+        else
+            playerOneScore -= sosCount;
+        turn = 3 - turn;
+
     }
 
     @Override

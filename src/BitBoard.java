@@ -27,7 +27,15 @@ public class BitBoard {
         int bitPosition = pos % 64;
         oBoard[index] |= 1L << bitPosition;
     }
+    public void removeSO(int row, int col) {
+        int pos = row * size + col; // Calculate position
+        int index = pos / 64; // Determine which long in the array
+        int bitPosition = pos % 64; // Determine bit position within the long
+        long mask = ~(1L << bitPosition); // Create a mask to clear the bit
 
+        sBoard[index] &= mask; // Clear the bit for 'S'
+        oBoard[index] &= mask; // Clear the bit for 'O'
+    }
     // Method to check if a cell is empty
     public boolean isEmpty(int row, int col) {
         int pos = row * size + col;
