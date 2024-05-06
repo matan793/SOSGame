@@ -38,41 +38,19 @@ public class PVE extends Entity {
         public void actionPerformed(ActionEvent e) {
             if(played)
                 return;
+            turn = 1;
             SButton s = (SButton) e.getSource();
             if (bitBoard.checkCell(s.row, s.col) == 0) {
                 Color turnColor = Color.BLUE;
-//                if (state == State.S) {
-//                   markButton(s.row, s.col);
-//                    sosCount = CheckSos(s.row, s.col, turnColor);
-//
-//                    moves.push(new Move(s.row, s.col, State.O));
-//                } else if (state == State.O) {
-//                   markButton(s.row, s.col);
-//                    sosCount = CheckSos(s.row, s.col, turnColor);
-//
-//
-//                    moves.push(new Move(s.row, s.col, State.O));
-//                }
-                markButton(s.row, s.col, state);
+
+                markButton(s.row, s.col, state, turn);
                 int sosCount = CheckSos(s.row, s.col, Color.BLUE);
                 playerScore += sosCount;
                 if(boardFull())
                     endGame();
                 if (sosCount == 0) {
                     played = true;
-//                    Thread thread = new Thread(() -> {
-//                        try {
-//                            do {
-//                                Thread.sleep(1500);
-//                            }while (ComputerMove());
-//
-//                        } catch (InterruptedException ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    });
-//
-//                    thread.start();
-
+                    turn = 2;
                     ComputerMove();
                 }
             }
@@ -149,7 +127,7 @@ public class PVE extends Entity {
                         if(boardFull())
                             endGame();
 
-                    }while (AreaMove() > 0);
+                    }while (MiravMove() > 0);
                     played = false;
 
 

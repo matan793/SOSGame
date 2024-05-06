@@ -13,11 +13,11 @@ public class Main extends JFrame {
         setLocationRelativeTo(null);
         setSize(size * 100, size * 100);
         setLayout(new BorderLayout());
-        //EVE p = new EVE(size, Algorithm.Expanding, Algorithm.Expanding);
-        //PVE p = new PVE(7, Algorithm.Expanding);
-        PVP p2 = new PVP(size);
-        add(p2, BorderLayout.CENTER);
-        add(new InputOutputPanel(p2), BorderLayout.NORTH);
+        //EVE p = new EVE(size, Algorithm.Expanding, Algorithm.Area);
+        //PVE p = new PVE(size, Algorithm.Expanding);
+        PVP p = new PVP(size);
+        add(p, BorderLayout.CENTER);
+        add(new InputOutputPanel(p), BorderLayout.NORTH);
         //add(new ScorePanel(), BorderLayout.WEST);
         setLocationRelativeTo(null);
         setVisible(true);

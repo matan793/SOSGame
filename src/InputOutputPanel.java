@@ -34,6 +34,7 @@ public class InputOutputPanel extends JPanel {
         add(topPanel);
         JPanel bottomPanel = new JPanel();
 
+        bottomPanel.add(new JLabel("Choose letter:"));
         bottomPanel.add(new JLabel("S:"));
         bottomPanel.add(sOption);
         bottomPanel.add(new JLabel("O:"));
@@ -41,6 +42,8 @@ public class InputOutputPanel extends JPanel {
         add(bottomPanel);
         JButton undo = new JButton("undo");
         add(undo);
+        JButton redo = new JButton("redo");
+        add(redo);
         game.state = State.S;
         undo.addActionListener(new ActionListener() {
             @Override

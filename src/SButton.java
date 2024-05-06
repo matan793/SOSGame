@@ -4,7 +4,7 @@ import java.awt.*;
 public class SButton extends JButton
 {
     private Image img;
-    public ButtonType letter;
+    public State letter;
 
     public Color[] linesArray;
     public final short row;
@@ -15,7 +15,7 @@ public class SButton extends JButton
         this.col = (short) col;
         linesArray = new Color[4];
         this.img=img;
-        this.letter = ButtonType.Empty;
+        //this.letter = State.Empty;
     }
 
     public Image getImg()
@@ -84,10 +84,23 @@ public class SButton extends JButton
     public void setLineArray(int i, Color lineColor) {
         if(linesArray[i] != null)
         {
-            linesArray[i] = new Color(linesArray[i].getRGB() + lineColor.getRGB());
+            linesArray[i] = new Color(Math.min(255, linesArray[i].getRed() + lineColor.getRed()),Math.min(255, linesArray[i].getGreen() + lineColor.getGreen()), Math.min(255, linesArray[i].getBlue() + lineColor.getBlue()));
         }
         else{
-            linesArray[i] = new Color(lineColor.getRGB());
+            linesArray[i] = new Color(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue());
+        }
+    }
+    public void RemoveLineArray(int i, Color lineColor)
+    {
+        int x =  linesArray[i].getRGB() - lineColor.getRGB();
+        int b= Color.BLACK.getRGB();
+        if(linesArray[i] != null && linesArray[i].getRGB() - lineColor.getRGB() == 0)
+        {
+            linesArray[i] = null;
+            //linesArray[i] = new Color(Math.min(255, linesArray[i].getRed() + lineColor.getRed()),Math.min(255, linesArray[i].getGreen() + lineColor.getGreen()), Math.min(255, linesArray[i].getBlue() + lineColor.getBlue()));
+        }
+        else{
+            linesArray[i] = new Color(Math.max(0, linesArray[i].getRed() - lineColor.getRed()),Math.max(0, linesArray[i].getGreen() - lineColor.getGreen()), Math.max(0, linesArray[i].getBlue() - lineColor.getBlue()));
         }
     }
 

@@ -9,6 +9,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     protected SButton[][]  Gboard;
     protected int boardCounter;
     protected BitBoard bitBoard;
+    protected int turn;
     protected  int board_size;
     protected Stack<Move> moves;
     public State state;
@@ -16,6 +17,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         this.board_size = boardSize;
         this.Gboard = new SButton[boardSize][boardSize];
         this.boardCounter = 0;
+        this.turn = 1;
         setLayout(new GridLayout(boardSize, boardSize));
         for (int i = 0; i < Gboard.length; i++) {
             for (int j = 0; j < Gboard[i].length; j++) {
@@ -29,7 +31,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         this.bitBoard = new BitBoard(boardSize);
         this.moves = new Stack<>();
     }
-    public void markButton(int row, int col, State s)
+    public void markButton(int row, int col, State s, int player)
     {
 
         if(s == State.S)
@@ -40,7 +42,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         Image img = icon.getImage();
         Gboard[row][col].setImg(img);
         boardCounter++;
-        moves.push(new Move(row, col, s));
+        moves.push(new Move(row, col, s, player));
     }
     protected boolean boardFull()
     {
@@ -51,6 +53,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     protected int CheckSos(short row, short colum, Color lineColor)
     {
         int sosCount = 0;
+
         if(bitBoard.checkCell(row, colum) == 2)
         {
             if (colum > 0 && colum < board_size - 1 && bitBoard.checkCell(row, colum-1) == 1 && bitBoard.checkCell(row, colum+1) == 1)

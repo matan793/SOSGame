@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.PriorityQueue;
 import java.util.Random;
 import java.util.Stack;
 
@@ -6,7 +7,7 @@ public abstract class Entity extends AbstractGraphicsBoard {
     protected boolean played = false;
 
     protected int computerScore;
-    Color color;
+    private Color color;
 
     public Entity(int boardSize) {
         super(boardSize);
@@ -135,7 +136,7 @@ public abstract class Entity extends AbstractGraphicsBoard {
                 played = false;
                 found = true;
                 int choice = rnd.nextInt(2) + 1;
-                markButton(i, j, State.values()[choice - 1]);
+                markButton(i, j, State.values()[choice - 1], turn);
                 return CheckSos((short) i, (short) j, color);
 
 
@@ -144,9 +145,9 @@ public abstract class Entity extends AbstractGraphicsBoard {
         return 0;
     }
     @Override
-    public void markButton(int row, int col, State s) {
-        super.markButton(row, col, s);
-        moves.push(new Move(row, col, s));
+    public void markButton(int row, int col, State s, int turn) {
+        super.markButton(row, col, s, turn);
+        moves.push(new Move(row, col, s, turn));
 
     }
     protected int ExpandingMove()
@@ -257,25 +258,52 @@ public abstract class Entity extends AbstractGraphicsBoard {
             max = RandomMove();
         else {
 
-            markButton(maxIndecies[0], maxIndecies[1], maxState);
+            markButton(maxIndecies[0], maxIndecies[1], maxState, turn);
             max = CheckSos((short) maxIndecies[0], (short) maxIndecies[1], color);
         }
         return max;
     }
-    protected int AreaMove()
+    protected int MiravMove()
     {
         int sosCount = 0;
-        int size = 0;
-        if(board_size < 6)
-            size = 3;
-        else if (board_size < 9) {
-            size = board_size / 2;
-        }
-        else
-            size = board_size / 3;
+        int maxIndecies[] = new int[2];
+        State maxState = State.S;
+        for (int i = 0; i < moves.size(); i++) {
+            for (int j = (moves.get(i).i == 0 ? 0 : moves.get(i).i - 1); j <= (moves.get(i).i == board_size - 1 ? board_size - 1 : moves.get(i).i + 1); j++)
+            {
+                for (int k = (moves.get(i).j == 0 ? 0 : moves.get(i).j - 1); k <= (moves.get(i).j == board_size - 1 ? board_size - 1 : moves.get(i).j + 1); k++)
+                {
+                    if(j != moves.get(i).i && k != moves.get(i).j && bitBoard.isEmpty(j, k))
+                    {
+                        int tmp = 0;
+                        tmp = evaluateBoardForO(j, k);
+                        if(tmp > sosCount)
+                        {
+                            sosCount = tmp;
+                            maxIndecies[0] = j;
+                            maxIndecies[1] = k;
+                            maxState = State.O;
+                        }
+                        tmp = evaluateBoardForS(j, k);
+                        if(tmp > sosCount)
+                        {
+                            sosCount = tmp;
+                            maxIndecies[0] = j;
+                            maxIndecies[1] = k;
+                            maxState = State.S;
 
-        for (int i = 0; i < 0; i++) {
-            
+                        }
+                    }
+                }
+
+            }
+        }
+        if(sosCount == 0)
+            sosCount = RandomMove();
+        else {
+
+            markButton(maxIndecies[0], maxIndecies[1], maxState, turn);
+            sosCount = CheckSos((short) maxIndecies[0], (short) maxIndecies[1], color);
         }
         return sosCount;
     }
