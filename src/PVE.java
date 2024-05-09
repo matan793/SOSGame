@@ -248,7 +248,7 @@ public class PVE extends Entity {
             });
             thread.start();
         }
-        else if(difficultyLevel == Algorithm.Area)
+        else if(difficultyLevel == Algorithm.AroundMoves)
         {
             Thread thread = new Thread(() ->{
                 try {

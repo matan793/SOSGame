@@ -30,7 +30,7 @@ public class EVE extends Entity{
                             sosCount = ExpandingMove();
                             computerScore+=sosCount;
                         }while (sosCount > 0);
-                    } else if (a1 == Algorithm.Area) {
+                    } else if (a1 == Algorithm.AroundMoves) {
                         int sosCount = 0;
                         do {
                             Thread.sleep(1500);
@@ -58,7 +58,7 @@ public class EVE extends Entity{
                             sosCount = ExpandingMove();
                             computer2Score+=sosCount;
                         }while (sosCount > 0);
-                    } else if (a2 == Algorithm.Area) {
+                    } else if (a2 == Algorithm.AroundMoves) {
                         int sosCount = 0;
                         do {
                             Thread.sleep(1500);
