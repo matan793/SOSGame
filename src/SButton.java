@@ -35,24 +35,6 @@ public class SButton extends JButton
        // drawLine(g, lineDirection.straight, Color.red);
         Graphics2D g2d = (Graphics2D)g;
         g2d.setStroke(new BasicStroke(5));
-//        if(diagnalsArray[0])
-//        {
-//            //horizontal
-//            g2d.drawLine(0, getHeight()/2, getWidth(), getHeight()/2);
-//        }
-//        if(diagnalsArray[1])
-//        {
-//            g2d.drawLine(getWidth()/2, 0, getWidth()/2, getHeight());
-//        }
-//        if(diagnalsArray[2])
-//        {
-//            g2d.drawLine(0, 0, getWidth(), getHeight());
-//        }
-//        if(diagnalsArray[3])
-//        {
-//            g2d.drawLine(0, getHeight(), getWidth(), 0);
-//        }
-
 
 
         if(linesArray[0] != null)

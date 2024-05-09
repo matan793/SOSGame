@@ -48,7 +48,26 @@ public class InputOutputPanel extends JPanel {
         undo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.undoMove();
+                if(game instanceof PVE) {
+                    if (!((PVE) game).played)
+                        game.undoMove();
+                }
+                else {
+                        game.undoMove();
+                    }
+            }
+        });
+        redo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(game instanceof PVE) {
+                    if (!((PVE) game).played)
+                        game.redoMove();
+                }
+                    else {
+                        game.redoMove();
+                    }
             }
         });
         sOption.addItemListener(new ItemListener() {

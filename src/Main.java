@@ -14,7 +14,7 @@ public class Main extends JFrame {
         setSize(size * 100, size * 100);
         setLayout(new BorderLayout());
         //EVE p = new EVE(size, Algorithm.Expanding, Algorithm.Area);
-        //PVE p = new PVE(size, Algorithm.Expanding);
+        //PVE p = new PVE(size, Algorithm.Area);
         PVP p = new PVP(size);
         add(p, BorderLayout.CENTER);
         add(new InputOutputPanel(p), BorderLayout.NORTH);

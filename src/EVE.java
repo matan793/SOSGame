@@ -100,6 +100,11 @@ public class EVE extends Entity{
     }
 
     @Override
+    public void replayGame() {
+
+    }
+
+    @Override
     protected void endGame() {
 
     }

@@ -12,6 +12,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     protected int turn;
     protected  int board_size;
     protected Stack<Move> moves;
+    protected Stack<Move> redoMoves;
     public State state;
     public  AbstractGraphicsBoard(int boardSize){
         this.board_size = boardSize;
@@ -30,10 +31,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         }
         this.bitBoard = new BitBoard(boardSize);
         this.moves = new Stack<>();
+        this.redoMoves = new Stack<>();
     }
     public void markButton(int row, int col, State s, int player)
     {
-
         if(s == State.S)
             bitBoard.placeS(row, col);
         else
@@ -197,6 +198,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
 
     public abstract void undoMove();
     public abstract  void redoMove();
+    public abstract  void replayGame();
     protected abstract void endGame();
 
 }

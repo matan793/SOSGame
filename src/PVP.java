@@ -36,6 +36,7 @@ public class PVP extends AbstractGraphicsBoard{
             t++;
 
             if (bitBoard.checkCell(s.row, s.col) == 0) {
+                redoMoves.clear();
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
                 markButton(s.row, s.col, state, turn);
                 count = CheckSos(s.row, s.col, turnColor);
@@ -51,16 +52,14 @@ public class PVP extends AbstractGraphicsBoard{
                     turn = 3 - turn;
                 }
                 SButton f = Gboard[1][4];
-                System.out.println("player " + turn + " turn");
-                for (int i = 0; i < board_size; i++) {
-                    for (int j = 0; j < board_size; j++) {
-                        System.out.print(bitBoard.checkCell(i, j) + ",");
-                    }
-                    System.out.println();
-                }
-                if(t==3) {
-                    System.out.println();
-                }
+//                System.out.println("player " + turn + " turn");
+//                for (int i = 0; i < board_size; i++) {
+//                    for (int j = 0; j < board_size; j++) {
+//                        System.out.print(bitBoard.checkCell(i, j) + ",");
+//                    }
+//                    System.out.println();
+//                }
+
 
 
 
@@ -73,10 +72,25 @@ public class PVP extends AbstractGraphicsBoard{
 
     @Override
     protected void endGame() {
-        JOptionPane.showMessageDialog(this, "game ended the player number " +
+        String winnerMessage = "game ended the player number " +
                 (playerOneScore > playerTwoScore ? "1" : (playerTwoScore == playerOneScore ? "1 and 2, its a tie" : "2")) + " won with a score of: "+
-                (playerOneScore >= playerTwoScore ? playerOneScore : playerTwoScore));
+                (Math.max(playerOneScore, playerTwoScore));
+        Object[] options = {"Replay", "New Game", "Exit"};
+        Menu menu = new Menu(options, winnerMessage + "\nChoose an option to proceed:", "Game Over!!");
+        int choice = menu.getChoice();
+        switch (choice) {
+            case 0: // Replay
+                break;
+            case 1: // New Game
+
+                repaint();
+                break;
+            case 2: // Exit
+                System.exit(0);
+                break;
+        }
     }
+
 
     @Override
     public void undoMove() {
@@ -97,9 +111,11 @@ public class PVP extends AbstractGraphicsBoard{
         else
             playerOneScore -= sosCount;
         boardCounter--;
+        redoMoves.push(move);
         if(sosCount == 0)
         {
-
+            if(!moves.isEmpty())
+                turn = moves.peek().player;
             return;
         }
        if(type == 1) {
@@ -173,7 +189,8 @@ public class PVP extends AbstractGraphicsBoard{
                updateColor(move.i + 1, move.j, 1, turn);
            }
        }
-
+       if(!moves.isEmpty())
+            turn = moves.peek().player;
 
     }
     private void updateColor(int i, int j, int direction, int turn) {
@@ -194,6 +211,28 @@ public class PVP extends AbstractGraphicsBoard{
     }
     @Override
     public void redoMove() {
+        if(redoMoves.isEmpty())
+            return;
+        Move move = redoMoves.pop();
+        markButton(move.i, move.j, move.state, move.player);
+        turn = move.player;
+        Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
+        int count = CheckSos((short) move.i, (short) move.j, turnColor);
+        if(turn == 1)
+            playerOneScore += count;
+        else
+            playerTwoScore += count;
+        if(boardFull())
+            endGame();
+        lastTurn = turn;
+        if(count == 0) {
+
+            turn = 3 - turn;
+        }
+    }
+
+    @Override
+    public void replayGame() {
 
     }
 
