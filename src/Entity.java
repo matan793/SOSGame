@@ -263,15 +263,16 @@ public abstract class Entity extends AbstractGraphicsBoard {
         }
         return max;
     }
-    protected int MiravMove()
+    protected int AroundMovesMove()
     {
         int sosCount = 0;
         int maxIndecies[] = new int[2];
         State maxState = State.S;
         for (int i = 0; i < moves.size() && sosCount < 2; i++) {
-            for (int j = (moves.get(i).i == 0 ? 0 : moves.get(i).i - 1); j <= (moves.get(i).i == board_size - 1 ? board_size - 1 : moves.get(i).i + 1); j++)
+
+            for (int j = Math.max(0, moves.get(i).i - 1); j <= Math.min(board_size - 1, moves.get(i).i + 1); j++)
             {
-                for (int k = (moves.get(i).j == 0 ? 0 : moves.get(i).j - 1); k <= (moves.get(i).j == board_size - 1 ? board_size - 1 : moves.get(i).j + 1); k++)
+                for (int k = Math.max(0, moves.get(i).j - 1); k <= Math.min(board_size - 1, moves.get(i).j + 1); k++)
                 {
                     if(j != moves.get(i).i && k != moves.get(i).j && bitBoard.isEmpty(j, k))
                     {

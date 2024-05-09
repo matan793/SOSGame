@@ -34,7 +34,7 @@ public class EVE extends Entity{
                         int sosCount = 0;
                         do {
                             Thread.sleep(1500);
-                            sosCount = MiravMove();
+                            sosCount = AroundMovesMove();
                             computerScore+=sosCount;
                         }while (sosCount > 0);
                     }
@@ -62,7 +62,7 @@ public class EVE extends Entity{
                         int sosCount = 0;
                         do {
                             Thread.sleep(1500);
-                            sosCount = MiravMove();
+                            sosCount = AroundMovesMove();
                             computer2Score+=sosCount;
                         }while (sosCount > 0);
                     }

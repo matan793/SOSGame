@@ -258,7 +258,7 @@ public class PVE extends Entity {
                         if(boardFull())
                             endGame();
 
-                    }while (MiravMove() > 0);
+                    }while (AroundMovesMove() > 0);
                     played = false;
 
 
