@@ -8,13 +8,13 @@ import java.awt.font.FontRenderContext;
 
 public class PVP extends AbstractGraphicsBoard{
 
-    private int lastTurn;
+
     int t = 0;
     private int playerOneScore, playerTwoScore;
     public PVP(int boardSize)
     {
         super(boardSize);
-        this.lastTurn = 1;
+
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
         for (int i = 0; i < super.Gboard.length; i++) {
@@ -46,24 +46,11 @@ public class PVP extends AbstractGraphicsBoard{
                     playerTwoScore += count;
                 if(boardFull())
                     endGame();
-                lastTurn = turn;
+
                 if(count == 0) {
 
                     turn = 3 - turn;
                 }
-                SButton f = Gboard[1][4];
-//                System.out.println("player " + turn + " turn");
-//                for (int i = 0; i < board_size; i++) {
-//                    for (int j = 0; j < board_size; j++) {
-//                        System.out.print(bitBoard.checkCell(i, j) + ",");
-//                    }
-//                    System.out.println();
-//                }
-
-
-
-
-
             }
 
         }
@@ -224,7 +211,7 @@ public class PVP extends AbstractGraphicsBoard{
             playerTwoScore += count;
         if(boardFull())
             endGame();
-        lastTurn = turn;
+
         if(count == 0) {
 
             turn = 3 - turn;

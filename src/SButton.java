@@ -86,10 +86,6 @@ public class SButton extends JButton
         }
     }
 
-    enum ButtonType{
-        Empty,
-        S,
-        O
-    }
+
    
 }
