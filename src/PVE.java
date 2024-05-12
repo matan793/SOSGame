@@ -186,9 +186,6 @@ public class PVE extends Entity {
                 }
             }
         }
-
-
-
     }
 
     private boolean ComputerMove(){

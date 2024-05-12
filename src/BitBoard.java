@@ -17,7 +17,6 @@ public class BitBoard {
         int index = pos / 64; // Determine which long in the array
         int bitPosition = pos % 64; // Determine bit position within the long
         sBoard[index] |= 1L << bitPosition; // Set the bit
-        System.out.println(Long.toBinaryString(sBoard[index]));
     }
 
 

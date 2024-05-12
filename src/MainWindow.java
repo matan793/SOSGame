@@ -72,6 +72,7 @@ public class MainWindow extends JFrame {
                         System.exit(0);
                         break;
                 }
+                break;
             case 2: // Exit
                 Message = "What Mode You Want To Play";
                 options = new Object[]{"Random vs Random", "Random vs Expanding", "Random vs Around Moves", "Expanding vs Expanding", "Expanding vs Around Moves", "Around Moves vs Around Moves", "Exit"};

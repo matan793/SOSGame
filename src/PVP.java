@@ -8,8 +8,6 @@ import java.awt.font.FontRenderContext;
 
 public class PVP extends AbstractGraphicsBoard{
 
-
-    int t = 0;
     private int playerOneScore, playerTwoScore;
     public PVP(int boardSize)
     {
@@ -33,7 +31,6 @@ public class PVP extends AbstractGraphicsBoard{
         public void actionPerformed(ActionEvent e) {
             SButton s = (SButton) e.getSource();
             int count = 0;
-            t++;
 
             if (bitBoard.checkCell(s.row, s.col) == 0) {
                 redoMoves.clear();
@@ -52,7 +49,6 @@ public class PVP extends AbstractGraphicsBoard{
                     turn = 3 - turn;
                 }
             }
-
         }
     }
 

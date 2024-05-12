@@ -104,27 +104,6 @@ public abstract class Entity extends AbstractGraphicsBoard {
         }
         return sosCount;
     }
-    protected boolean isGoodForPlacingS(int row, int colm)
-    {
-
-        return true;
-    }
-    protected boolean isGoodForPlacingO(int row, int colum)
-    {
-        for (int i = (row==0 ? 0 : row - 1); i <= (row == board_size - 1 ? row : row + 1); i++)
-        {
-            for (int j = (colum==0 ? 0 : colum - 1); j <= (colum == board_size - 1 ? colum : colum + 1); j++)
-            {
-                if(i != row || j != colum)
-                {
-                    if(bitBoard.checkCell(i, j) == 2)
-                        return false;
-                }
-            }
-        }
-
-        return true;
-    }
     protected int RandomMove() {
         Random rnd = new Random();
         boolean found = false;

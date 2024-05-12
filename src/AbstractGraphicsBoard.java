@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public abstract class AbstractGraphicsBoard extends JPanel {
@@ -42,6 +43,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         ImageIcon icon = new ImageIcon(s == State.S ? "src/images/s.png" : "src/images/o.png");
         Image img = icon.getImage();
         Gboard[row][col].setImg(img);
+        Gboard[row][col].repaint();
         boardCounter++;
         moves.push(new Move(row, col, s, player));
     }
@@ -54,7 +56,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     protected int CheckSos(short row, short colum, Color lineColor)
     {
         int sosCount = 0;
-
+        ArrayList<SButton> arr = new ArrayList<>(3);
         if(bitBoard.checkCell(row, colum) == 2)
         {
             if (colum > 0 && colum < board_size - 1 && bitBoard.checkCell(row, colum-1) == 1 && bitBoard.checkCell(row, colum+1) == 1)
@@ -63,6 +65,9 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(0, lineColor);
                 Gboard[row][colum-1].setLineArray(0, lineColor);
                 Gboard[row][colum+1].setLineArray(0, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row][colum+1]);
+                arr.add(Gboard[row][colum-1]);
                 sosCount++;
                 System.out.println("SOS Found(Horizontal)");
             }
@@ -72,6 +77,9 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(1, lineColor);
                 Gboard[row+1][colum].setLineArray(1, lineColor);
                 Gboard[row-1][colum].setLineArray(1, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row-1][colum]);
+                arr.add(Gboard[row+1][colum]);
                 sosCount++;
                 System.out.println("SOS Found(Vertical)");
             }
@@ -81,6 +89,9 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(2, lineColor);
                 Gboard[row+1][colum+1].setLineArray(2, lineColor);
                 Gboard[row-1][colum-1].setLineArray(2, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row+1][colum+1]);
+                arr.add(Gboard[row-1][colum-1]);
 
                 sosCount++;
                 System.out.println("SOS Found(Diagonal(Top To Down))");
@@ -93,6 +104,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(3, lineColor);
                 Gboard[row+1][colum-1].setLineArray(3, lineColor);
                 Gboard[row-1][colum+1].setLineArray(3, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row+1][colum-1]);
+                arr.add(Gboard[row-1][colum+1]);
+
                 sosCount++;
                 System.out.println("SOS Found(Diagonal(Down To Top))");
 
@@ -106,6 +121,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(0, lineColor);
                 Gboard[row][colum+1].setLineArray(0, lineColor);
                 Gboard[row][colum+2].setLineArray(0, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row][colum+1]);
+                arr.add(Gboard[row][colum+2]);
+
                 sosCount++;
                 System.out.println("SOS Found(horizontal (forward))");
 
@@ -116,6 +135,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(0, lineColor);
                 Gboard[row][colum-1].setLineArray(0, lineColor);
                 Gboard[row][colum-2].setLineArray(0, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row][colum-1]);
+                arr.add(Gboard[row][colum-2]);
+
                 sosCount++;
                 System.out.println("SOS Found(horizontal (backwards))");
 
@@ -126,6 +149,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(1, lineColor);
                 Gboard[row+1][colum].setLineArray(1, lineColor);
                 Gboard[row+2][colum].setLineArray(1, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row+1][colum]);
+                arr.add(Gboard[row+2][colum]);
+
                 sosCount++;
                 System.out.println("SOS Found(vertical (downward))");
 
@@ -136,6 +163,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(1, lineColor);
                 Gboard[row-1][colum].setLineArray(1, lineColor);
                 Gboard[row-2][colum].setLineArray(1, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row-1][colum]);
+                arr.add(Gboard[row-2][colum]);
+
                 sosCount++;
                 System.out.println("SOS Found(vertical (upwards))");
 
@@ -146,6 +177,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(2, lineColor);
                 Gboard[row-1][colum-1].setLineArray(2, lineColor);
                 Gboard[row-2][colum-2].setLineArray(2, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row-1][colum-1]);
+                arr.add(Gboard[row-2][colum-2]);
+
                 sosCount++;
             }
             if(row < board_size - 2 && colum <board_size -2 && bitBoard.checkCell(row+1, colum+1) == 2 && bitBoard.checkCell(row+2, colum+2) == 1)
@@ -154,6 +189,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(2, lineColor);
                 Gboard[row+1][colum+1].setLineArray(2, lineColor);
                 Gboard[row+2][colum+2].setLineArray(2, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row+1][colum+1]);
+                arr.add(Gboard[row+2][colum+2]);
+
                 sosCount++;
             }
             if(colum > 1 && row < board_size - 2 && bitBoard.checkCell(row+1, colum-1) == 2 && bitBoard.checkCell(row+2, colum-2) == 1)
@@ -162,6 +201,10 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(3, lineColor);
                 Gboard[row+1][colum-1].setLineArray(3, lineColor);
                 Gboard[row+2][colum-2].setLineArray(3, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row+1][colum-1]);
+                arr.add(Gboard[row+2][colum-2]);
+
                 sosCount++;
             }
             if(row > 1 && colum < board_size - 2 && bitBoard.checkCell(row-1, colum+1) == 2 &&bitBoard.checkCell(row-2, colum+2) == 1)
@@ -170,14 +213,17 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 Gboard[row][colum].setLineArray(3, lineColor);
                 Gboard[row-1][colum+1].setLineArray(3, lineColor);
                 Gboard[row-2][colum+2].setLineArray(3, lineColor);
+                arr.add(Gboard[row][colum]);
+                arr.add(Gboard[row-1][colum+1]);
+                arr.add(Gboard[row-2][colum+2]);
+
                 sosCount++;
             }
 
         }
-        for (int i = 0; i < Gboard.length; i++) {
-            for (int j = 0; j < Gboard[i].length; j++) {
-                Gboard[i][j].repaint();
-            }
+        for (SButton s : arr)
+        {
+            s.repaint();
         }
         return sosCount;
     }
