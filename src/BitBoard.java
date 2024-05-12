@@ -2,7 +2,11 @@ public class BitBoard {
     private long[] sBoard; // Bitboards for "S"
     private long[] oBoard; // Bitboards for "O"
     private final int size;
-
+    /**
+     * Constructor for BitBoard class.
+     * Initializes the bit boards for "S" and "O" with the specified size.
+     * @param size Size of the board
+     */
     public BitBoard(int size) {
         this.size = size;
         int arraySize = (int) Math.ceil(size * size / 64.0);
@@ -11,7 +15,11 @@ public class BitBoard {
         oBoard = new long[arraySize];
     }
 
-    // Method to place an "S" on the board
+    /**
+     * Places an "S" on the board at the specified row and column.
+     * @param row Row index
+     * @param col Column index
+     */
     public void placeS(int row, int col) {
         int pos = row * size + col; // Calculate position
         int index = pos / 64; // Determine which long in the array
@@ -20,13 +28,22 @@ public class BitBoard {
     }
 
 
-    // Method to place an "O" on the board
+    /**
+     * Places an "O" on the board at the specified row and column.
+     * @param row Row index
+     * @param col Column index
+     */
     public void placeO(int row, int col) {
         int pos = row * size + col;
         int index = pos / 64;
         int bitPosition = pos % 64;
         oBoard[index] |= 1L << bitPosition;
     }
+    /**
+     * Removes an "S" or "O" from the board at the specified row and column.
+     * @param row Row index
+     * @param col Column index
+     */
     public void removeSO(int row, int col) {
         int pos = row * size + col; // Calculate position
         int index = pos / 64; // Determine which long in the array
@@ -36,7 +53,12 @@ public class BitBoard {
         sBoard[index] &= mask; // Clear the bit for 'S'
         oBoard[index] &= mask; // Clear the bit for 'O'
     }
-    // Method to check if a cell is empty
+    /**
+     * Checks if a cell at the specified row and column is empty.
+     * @param row Row index
+     * @param col Column index
+     * @return True if the cell is empty, false otherwise
+     */
     public boolean isEmpty(int row, int col) {
         int pos = row * size + col;
         int index = pos / 64;
@@ -44,6 +66,12 @@ public class BitBoard {
         //return (sBoard[index] & (1L << bitPosition)) == 0 && (oBoard[index] & (1L << bitPosition)) == 0;
         return checkCell(row, col) == 0;
     }
+    /**
+     * Checks the content of a cell at the specified row and column.
+     * @param row Row index
+     * @param col Column index
+     * @return 0 if cell is empty, 1 if "S" is found, 2 if "O" is found
+     */
     public int checkCell(int row, int col) {
         int pos = row * size + col;
         int index = pos / 64;
@@ -59,5 +87,12 @@ public class BitBoard {
         } else {
             return 0; // Cell is empty
         }
+    }
+    /**
+     * Clears the bit boards, resetting them to all zeros.
+     */
+    public void clear() {
+        sBoard = new long[size];
+        oBoard = new long[size];
     }
 }

@@ -12,6 +12,10 @@ public class InputOutputPanel extends JPanel {
     private JLabel playerOneText, playerTwoText;
     private JRadioButton sOption, oOption;
     private AbstractGraphicsBoard game;
+    /**
+     * Constructor for InputOutputPanel.
+     * @param game The game board instance
+     */
     public InputOutputPanel(AbstractGraphicsBoard game)
     {
         setLayout(new GridLayout(2,0));

@@ -15,6 +15,11 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     protected Stack<Move> moves;
     protected Stack<Move> redoMoves;
     public State state;
+    /**
+     * Constructor for AbstractGraphicsBoard.
+     * Initializes the game board, bitBoard, and other necessary fields.
+     * @param boardSize Size of the game board
+     */
     public  AbstractGraphicsBoard(int boardSize){
         this.board_size = boardSize;
         this.Gboard = new SButton[boardSize][boardSize];
@@ -26,14 +31,22 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 ImageIcon icon = new ImageIcon("src/images/background.png");
                 Image img = icon.getImage();
                 Gboard[i][j] = new SButton(img, i, j);
-                this.state = State.S;
                 add(Gboard[i][j]);
             }
         }
+        this.state = State.S;
         this.bitBoard = new BitBoard(boardSize);
         this.moves = new Stack<>();
         this.redoMoves = new Stack<>();
     }
+    /**
+     * Marks a button on the game board with a specified state and player.
+     * Updates the visual representation of the button based on the state.
+     * @param row Row index of the button
+     * @param col Column index of the button
+     * @param s State to mark the button with (S or O)
+     * @param player Player who made the move
+     */
     public void markButton(int row, int col, State s, int player)
     {
         if(s == State.S)
@@ -47,12 +60,23 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         boardCounter++;
         moves.push(new Move(row, col, s, player));
     }
+    /**
+     * Checks if the game board is full.
+     * @return True if the game board is full, false otherwise
+     */
     protected boolean boardFull()
     {
         return boardCounter == board_size*board_size;
     }
 
-
+    /**
+     * Checks for SOS patterns around a specified position on the game board.
+     * Updates the visual representation of the buttons involved in the pattern.
+     * @param row Row index of the position
+     * @param colum Column index of the position
+     * @param lineColor Color to mark the buttons involved in the SOS pattern
+     * @return Number of SOS patterns found
+     */
     protected int CheckSos(short row, short colum, Color lineColor)
     {
         int sosCount = 0;
@@ -241,7 +265,7 @@ public abstract class AbstractGraphicsBoard extends JPanel {
         //paintSO(g);
     }
 
-
+    // Abstract methods for undo, redo, replay, and end game logic
     public abstract void undoMove();
     public abstract  void redoMove();
     public abstract  void replayGame();

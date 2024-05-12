@@ -8,17 +8,31 @@ public abstract class Entity extends AbstractGraphicsBoard {
 
     protected int computerScore;
     private Color color;
-
+    /**
+     * Constructor for the Entity class.
+     * Initializes the entity with the specified board size.
+     * @param boardSize Size of the board
+     */
     public Entity(int boardSize) {
         super(boardSize);
         this.computerScore = 0;
         //this.moves = new Stack<>();
         this.color = Color.RED;
     }
+    /**
+     * Sets the color of the entity.
+     * @param color Color to set
+     */
     public void SetColor(Color color)
     {
         this.color = color;
     }
+    /**
+     * Evaluates the board for possible SOS formations for "S" at the specified row and column.
+     * @param row Row index
+     * @param colum Column index
+     * @return Number of SOS formations found
+     */
     protected int evaluateBoardForS(int row, int colum)
     {
         int sosCount = 0;
@@ -72,6 +86,12 @@ public abstract class Entity extends AbstractGraphicsBoard {
         }
         return sosCount;
     }
+    /**
+     * Evaluates the board for possible SOS formations for "O" at the specified row and column.
+     * @param row Row index
+     * @param colum Column index
+     * @return Number of SOS formations found
+     */
     protected int evaluateBoardForO(int row, int colum)
     {
         int sosCount = 0;
@@ -104,6 +124,10 @@ public abstract class Entity extends AbstractGraphicsBoard {
         }
         return sosCount;
     }
+    /**
+     * Generates a random move on the board.
+     * @return Number of SOS formations found after the move
+     */
     protected int RandomMove() {
         Random rnd = new Random();
         boolean found = false;
@@ -123,12 +147,23 @@ public abstract class Entity extends AbstractGraphicsBoard {
         }
         return 0;
     }
+    /**
+     * Marks a button on the board at the specified row and column with the given state and turn.
+     * @param row Row index
+     * @param col Column index
+     * @param s State of the button (S or O)
+     * @param turn Turn of the player
+     */
     @Override
     public void markButton(int row, int col, State s, int turn) {
         super.markButton(row, col, s, turn);
         moves.push(new Move(row, col, s, turn));
 
     }
+    /**
+     * Expanding move strategy to find the best move on the board.
+     * @return Number of SOS formations found after the move
+     */
     protected int ExpandingMove()
     {
         if(moves.empty())
@@ -242,6 +277,10 @@ public abstract class Entity extends AbstractGraphicsBoard {
         }
         return max;
     }
+    /**
+     * Around moves move strategy to find the best move around the previous moves on the board.
+     * @return Number of SOS formations found after the move
+     */
     protected int AroundMovesMove()
     {
         int sosCount = 0;

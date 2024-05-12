@@ -9,7 +9,12 @@ import java.util.Stack;
 public class PVE extends Entity {
     private int playerScore;
     private Algorithm difficultyLevel;
-    int debugCounter = 0;
+    /**
+     * Constructs a PVE object with the specified board size and difficulty level.
+     *
+     * @param bsize The size of the game board.
+     * @param difficultyLevel The difficulty level of the computer.
+     */
     public PVE(int bsize, Algorithm difficultyLevel) {
         super(bsize);
         this.playerScore = 0;
@@ -21,7 +26,9 @@ public class PVE extends Entity {
         }
 
     }
-
+    /**
+     * Handles the undoing of the player's move.
+     */
     @Override
     public void undoMove() {
         if(moves.isEmpty() || played)
@@ -123,6 +130,14 @@ public class PVE extends Entity {
             turn = moves.peek().player;
 
     }
+    /**
+     * Updates the color of the specified cell in the given direction.
+     *
+     * @param i The row index of the cell.
+     * @param j The column index of the cell.
+     * @param direction The direction to update (0 for horizontal, 1 for vertical, 2 for diagonal up, 3 for diagonal down).
+     * @param turn The player's turn (1 for player, 2 for computer).
+     */
     private void updateColor(int i, int j, int direction, int turn) {
         Color currentColor = Gboard[i][j].linesArray[direction];
         Color turnColor = turn == 1 ? Color.BLUE : Color.red;
@@ -139,6 +154,9 @@ public class PVE extends Entity {
             Gboard[i][j].RemoveLineArray(direction, turnColor);
         }
     }
+    /**
+     * Handles the replaying of the game.
+     */
     @Override
     public void redoMove() {
         if(redoMoves.isEmpty())
@@ -162,7 +180,38 @@ public class PVE extends Entity {
 
     @Override
     public void replayGame() {
+        Thread thread = new Thread(() ->{
+            turn = 1;
+            bitBoard.clear();
+            boardCounter = 0;
+            for (int i = 0; i < Gboard.length; i++) {
+                for (int j = 0; j < Gboard[i].length; j++) {
+                    Gboard[i][j].clearLineArray();
+                    ImageIcon icon = new ImageIcon("src/images/background.png");
+                    Image img = icon.getImage();
+                    Gboard[i][j].setImg(img);
+                    Gboard[i][j].repaint();
+                    Gboard[i][j].removeActionListener(Gboard[i][j].getActionListeners()[0]);
+                }
+            }
+            int size =  moves.size();
+            for (int i = 0; i < size; i++) {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Move move = moves.get(i);
+                markButton(move.i, move.j, move.state, move.player);
+                turn = move.player;
+                Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
+                int count = CheckSos((short) move.i, (short) move.j, turnColor);
 
+
+
+            }
+        });
+        thread.start();
     }
 
     class AL implements ActionListener {
@@ -187,11 +236,12 @@ public class PVE extends Entity {
             }
         }
     }
-
+    /**
+     * Initiates the computer's move based on the selected difficulty level.
+     *
+     * @return true if the computer successfully makes a move, false otherwise.
+     */
     private boolean ComputerMove(){
-        debugCounter++;
-        if(debugCounter == 2)
-            System.out.println("mirav my wife");
         if(difficultyLevel == Algorithm.Random)
         {
 
@@ -272,12 +322,30 @@ public class PVE extends Entity {
         return false;
     }
 
-
+    /**
+     * Handles the end of the game, displaying the winner and options for the player.
+     */
     @Override
     protected void endGame() {
-        JOptionPane.showMessageDialog(this, "game ended " +
-                (playerScore > computerScore ? "you won!" : (playerScore == computerScore ? "its a tie" : "computer won")) + " with a score of: "+
-                (playerScore >= computerScore ? playerScore : computerScore));
+
+        String winnerMessage ="game ended " +
+                        (playerScore > computerScore ? "you won!" : (playerScore == computerScore ? "its a tie" : "computer won")) + " with a score of: "+
+                        (Math.max(playerScore, computerScore));
+        Object[] options = { "New Game", "Replay Game", "Exit"};
+        Menu menu = new Menu(options, winnerMessage + "\nChoose an option to proceed:", "Game Over!!");
+        int choice = menu.getChoice();
+        switch (choice) {
+            case 0: // New Game
+
+                repaint();
+                break;
+            case 1:
+                replayGame();
+                break;
+            case 2: // Exit
+                System.exit(0);
+                break;
+        }
         
     }
 

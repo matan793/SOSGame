@@ -3,8 +3,7 @@ import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class MainWindow extends JFrame {
     public MainWindow() {
         String Message = "What Size Do You Want To Play";
@@ -16,6 +15,7 @@ public class MainWindow extends JFrame {
         switch (choice) {
             case 0: // Replay
                 size = 3;
+                break;
             case 1: // New Game
                 size = 4;
 
