@@ -40,28 +40,24 @@ public abstract class Entity extends AbstractGraphicsBoard {
         {
             //TODO::horizontal (forward)
             sosCount++;
-            System.out.println("SOS Found(horizontal (forward))");
 
         }
         if(colum > 1 &&bitBoard.checkCell(row, colum-1) == 2 && bitBoard.checkCell(row, colum-2) == 1)
         {
             //TODO::horizontal (backwards)
             sosCount++;
-            System.out.println("SOS Found(horizontal (backwards))");
 
         }
         if(row < board_size - 2 && bitBoard.checkCell(row+1, colum) == 2 && bitBoard.checkCell(row+2, colum) == 1)
         {
             //TODO::vertical (downward)
             sosCount++;
-            System.out.println("SOS Found(vertical (downward))");
 
         }
         if(row > 1 && bitBoard.checkCell(row-1, colum) == 2 && bitBoard.checkCell(row-2, colum) == 1)
         {
             //TODO::vertical (upwards)
             sosCount++;
-            System.out.println("SOS Found(vertical (upwards))");
 
         }
         if(row > 1 && colum > 1 && bitBoard.checkCell(row-1, colum-1) == 2 && bitBoard.checkCell(row-2, colum-2) == 1)
@@ -100,26 +96,22 @@ public abstract class Entity extends AbstractGraphicsBoard {
         {
             //TODO::Horizontal
             sosCount++;
-            System.out.println("SOS Found(Horizontal)");
         }
         if(row > 0 && row < board_size - 1 && bitBoard.checkCell(row-1, colum) == 1 && bitBoard.checkCell(row+1, colum) == 1)
         {
             //TODO::Vertical
             sosCount++;
-            System.out.println("SOS Found(Vertical)");
         }
         if(colum > 0 && colum < board_size - 1 && row > 0 && row < board_size - 1 && bitBoard.checkCell(row-1, colum-1) == 1 && bitBoard.checkCell(row+1, colum+1) == 1)
         {
             //TODO::Diagonal(Top To Down)
             sosCount++;
-            System.out.println("SOS Found(Diagonal(Top To Down))");
 
         }
         if(colum > 0 && colum < board_size - 1 && row > 0 && row < board_size - 1 && bitBoard.checkCell(row+1, colum-1) == 1 && bitBoard.checkCell(row-1, colum+1) == 1)
         {
             //TODO::Diagonal(Down To Top)
             sosCount++;
-            System.out.println("SOS Found(Diagonal(Down To Top))");
 
         }
         return sosCount;
@@ -131,6 +123,8 @@ public abstract class Entity extends AbstractGraphicsBoard {
     protected int RandomMove() {
         Random rnd = new Random();
         boolean found = false;
+        if(boardFull())
+            return 0;
         while (!found) {
 
             int i = rnd.nextInt(board_size);

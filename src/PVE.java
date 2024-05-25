@@ -38,6 +38,7 @@ public class PVE extends Entity {
         ImageIcon icon = new ImageIcon("src/images/background.png");
         Image img = icon.getImage();
         Gboard[move.i][move.j].setImg(img);
+        Gboard[move.i][move.j].repaint();
         int type = bitBoard.checkCell(move.i, move.j);
         for (int i = 0; i < 4; i++) {
             Gboard[move.i][move.j].linesArray[i] = null;
@@ -51,8 +52,7 @@ public class PVE extends Entity {
         redoMoves.push(move);
         if(sosCount == 0)
         {
-            if(!moves.isEmpty())
-                turn = moves.peek().player;
+            turn = move.player;
             return;
         }
         if(type == 1) {
@@ -77,7 +77,7 @@ public class PVE extends Entity {
                     updateColor(move.i - 1, move.j + 1, 3, turn);
                     updateColor(move.i - 2, move.j + 2, 3, turn);
                 }
-                if (move.i < board_size - 1) {
+                if (move.i < board_size - 2) {
                     updateColor(move.i + 1, move.j + 1, 2, turn);
                     updateColor(move.i + 2, move.j + 2, 2, turn);
                 }
@@ -126,8 +126,7 @@ public class PVE extends Entity {
                 updateColor(move.i + 1, move.j, 1, turn);
             }
         }
-        if(!moves.isEmpty())
-            turn = moves.peek().player;
+       turn = move.player;
 
     }
     /**
@@ -321,7 +320,29 @@ public class PVE extends Entity {
         //played = false;
         return false;
     }
+    /*
+       handles the making of a new game
+        */
+    @Override
+    protected void newGame() {
+        turn = 1;
+        moves.clear();
+        redoMoves.clear();
+        bitBoard.clear();
+        boardCounter = 0;
+        for (int i = 0; i < Gboard.length; i++) {
+            for (int j = 0; j < Gboard[i].length; j++) {
+                Gboard[i][j].clearLineArray();
+                ImageIcon icon = new ImageIcon("src/images/background.png");
+                Image img = icon.getImage();
+                Gboard[i][j].setImg(img);
+                Gboard[i][j].repaint();
 
+            }
+        }
+        playerScore = 0;
+        computerScore = 0;
+    }
     /**
      * Handles the end of the game, displaying the winner and options for the player.
      */
@@ -336,8 +357,7 @@ public class PVE extends Entity {
         int choice = menu.getChoice();
         switch (choice) {
             case 0: // New Game
-
-                repaint();
+                newGame();
                 break;
             case 1:
                 replayGame();

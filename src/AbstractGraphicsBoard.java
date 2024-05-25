@@ -93,7 +93,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row][colum+1]);
                 arr.add(Gboard[row][colum-1]);
                 sosCount++;
-                System.out.println("SOS Found(Horizontal)");
             }
             if(row > 0 && row < board_size - 1 && bitBoard.checkCell(row-1, colum) == 1 &&bitBoard.checkCell(row+1, colum) == 1)
             {
@@ -105,7 +104,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row-1][colum]);
                 arr.add(Gboard[row+1][colum]);
                 sosCount++;
-                System.out.println("SOS Found(Vertical)");
             }
             if(colum > 0 && colum < board_size - 1 && row > 0 && row <board_size - 1 && bitBoard.checkCell(row-1, colum-1) == 1 && bitBoard.checkCell(row+1, colum+1) == 1)
             {
@@ -118,8 +116,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row-1][colum-1]);
 
                 sosCount++;
-                System.out.println("SOS Found(Diagonal(Top To Down))");
-
             }
             if(colum > 0 && colum < board_size - 1 && row > 0 && row < board_size - 1 && bitBoard.checkCell(row+1, colum-1) == 1 && bitBoard.checkCell(row-1, colum+1) == 1)
             {
@@ -133,8 +129,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row-1][colum+1]);
 
                 sosCount++;
-                System.out.println("SOS Found(Diagonal(Down To Top))");
-
             }
         }
         if(bitBoard.checkCell(row, colum) == 1)
@@ -150,8 +144,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row][colum+2]);
 
                 sosCount++;
-                System.out.println("SOS Found(horizontal (forward))");
-
             }
             if(colum > 1 && bitBoard.checkCell(row, colum-1) == 2 && bitBoard.checkCell(row, colum-2) == 1)
             {
@@ -164,8 +156,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row][colum-2]);
 
                 sosCount++;
-                System.out.println("SOS Found(horizontal (backwards))");
-
             }
             if(row < board_size - 2 && bitBoard.checkCell(row+1, colum) == 2 && bitBoard.checkCell(row+2, colum) == 1)
             {
@@ -178,8 +168,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row+2][colum]);
 
                 sosCount++;
-                System.out.println("SOS Found(vertical (downward))");
-
             }
             if(row > 1 && bitBoard.checkCell(row-1, colum) == 2 && bitBoard.checkCell(row-2, colum) == 1)
             {
@@ -192,8 +180,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
                 arr.add(Gboard[row-2][colum]);
 
                 sosCount++;
-                System.out.println("SOS Found(vertical (upwards))");
-
             }
             if(row > 1 && colum > 1 && bitBoard.checkCell(row-1, colum-1) == 2 && bitBoard.checkCell(row-2, colum-2) == 1)
             {
@@ -270,5 +256,6 @@ public abstract class AbstractGraphicsBoard extends JPanel {
     public abstract  void redoMove();
     public abstract  void replayGame();
     protected abstract void endGame();
+    protected abstract void newGame();
 
 }

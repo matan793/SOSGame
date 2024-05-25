@@ -165,20 +165,21 @@ public class EVE extends Entity{
         String winnerMessage ="game ended " +
                 (computer2Score > computerScore ? "second Algorithm won" : (computer2Score == computerScore ? " its a tie" : "First Algorithm won")) + " with a score of: "+
                 (Math.max(computer2Score, computerScore));
-        Object[] options = { "New Game", "Replay Game", "Exit"};
+        Object[] options = {"Replay Game", "Exit"};
         Menu menu = new Menu(options, winnerMessage + "\nChoose an option to proceed:", "Game Over!!");
         int choice = menu.getChoice();
         switch (choice) {
-            case 0: // New Game
-
-                repaint();
-                break;
-            case 1:
+            case 0:
                 replayGame();
                 break;
-            case 2: // Exit
+            case 1: // Exit
                 System.exit(0);
                 break;
         }
+    }
+    //not implemented
+    @Override
+    protected void newGame() {
+
     }
 }
