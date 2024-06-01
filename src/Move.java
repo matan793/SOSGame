@@ -1,7 +1,9 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Collections;
 
-public class Move {
+public class Move implements Serializable {
+    private static final long serialVersionUID = 1L;
     public State state;
     public int i, j;
     public int player;

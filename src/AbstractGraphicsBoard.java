@@ -1,12 +1,19 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public abstract class AbstractGraphicsBoard extends JPanel {
+public abstract class AbstractGraphicsBoard extends JPanel implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     protected SButton[][]  Gboard;
     protected int boardCounter;
     protected BitBoard bitBoard;
@@ -250,11 +257,54 @@ public abstract class AbstractGraphicsBoard extends JPanel {
        // paintSquares(g, w, h);
         //paintSO(g);
     }
+    public void saveGame(GameType gameType) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("SOS Files", "sos");
+        fileChooser.setFileFilter(filter);
+        String selectedFilePath = null;
+        // Show the open dialog
+        int result = fileChooser.showSaveDialog(this);
+
+        // Check if a file was selected
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Get the selected file
+            selectedFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+            if (!selectedFilePath.endsWith(".sos")) {
+                selectedFilePath += ".sos";
+            } else {
+                return;
+            }
+            try (FileOutputStream fos = new FileOutputStream(selectedFilePath);
+                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+                oos.writeObject(gameType);
+                oos.writeInt(board_size);
+                oos.writeObject(moves);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+            try {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                     UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     // Abstract methods for undo, redo, replay, and end game logic
     public abstract void undoMove();
     public abstract  void redoMove();
-    public abstract  void replayGame();
+    public abstract  void replayGame(Stack<Move> moveStack);
     protected abstract void endGame();
     protected abstract void newGame();
 

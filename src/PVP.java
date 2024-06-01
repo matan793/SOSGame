@@ -1,10 +1,15 @@
 import javax.imageio.metadata.IIOMetadataFormatImpl;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
 import java.util.Arrays;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Stack;
 
 public class PVP extends AbstractGraphicsBoard{
 
@@ -31,6 +36,22 @@ public class PVP extends AbstractGraphicsBoard{
         System.out.println("player " + turn + " turn");
         System.out.println(new Color(Color.BLUE.getRGB() + Color.RED.getRGB()).equals(Color.MAGENTA));
 
+    }
+    public PVP(int boardSize, Stack<Move> moveStack)
+    {
+        super(boardSize);
+
+        this.playerOneScore = 0;
+        this.playerTwoScore = 0;
+        for (int i = 0; i < moveStack.size(); i++) {
+            moves.push(moveStack.get(i));
+        }
+        replayGame(moveStack);
+        for (int i = 0; i < super.Gboard.length; i++) {
+            for (int j = 0; j < super.Gboard[i].length; j++) {
+                Gboard[i][j].addActionListener(new AL());
+            }
+        }
     }
     class AL implements ActionListener
     {
@@ -84,13 +105,16 @@ public class PVP extends AbstractGraphicsBoard{
                 newGame();
                 break;
             case 1:
-                replayGame();
+                replayGame(moves);
                 break;
             case 2: // Exit
                 System.exit(0);
                 break;
         }
     }
+
+
+
     /*
     handles the making of a new game
      */
@@ -269,7 +293,7 @@ public class PVP extends AbstractGraphicsBoard{
     }
 
     @Override
-    public void replayGame() {
+    public void replayGame(Stack<Move> moveStack) {
        Thread thread = new Thread(() ->{
            turn = 1;
            bitBoard.clear();
@@ -281,21 +305,23 @@ public class PVP extends AbstractGraphicsBoard{
                    Image img = icon.getImage();
                    Gboard[i][j].setImg(img);
                    Gboard[i][j].repaint();
-                   Gboard[i][j].removeActionListener(Gboard[i][j].getActionListeners()[0]);
+                   if(Gboard[i][j].getActionListeners().length > 0)
+                       Gboard[i][j].removeActionListener(Gboard[i][j].getActionListeners()[0]);
                }
            }
-           int size =  moves.size();
+           int size =  moveStack.size();
+           int count = 0;
            for (int i = 0; i < size; i++) {
                try {
                    Thread.sleep(300);
                } catch (InterruptedException e) {
                    throw new RuntimeException(e);
                }
-               Move move = moves.get(i);
+               Move move = moveStack.get(i);
                markButton(move.i, move.j, move.state, move.player);
                turn = move.player;
                Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
-               int count = CheckSos((short) move.i, (short) move.j, turnColor);
+               count = CheckSos((short) move.i, (short) move.j, turnColor);
                if(turn == 1)
                    playerOneScore += count;
                else
@@ -305,6 +331,9 @@ public class PVP extends AbstractGraphicsBoard{
 
 
            }
+           if(!moveStack.isEmpty() && count == 0)
+               turn = 3 - turn;
+
        });
        thread.start();
 

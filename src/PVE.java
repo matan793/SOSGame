@@ -1,7 +1,11 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
@@ -25,6 +29,23 @@ public class PVE extends Entity {
             }
         }
 
+    }
+    public PVE(int bsize, Algorithm difficultyLevel, Stack<Move> moveStack)
+    {
+        super(bsize);
+        this.playerScore = 0;
+        this.difficultyLevel = difficultyLevel;
+        for (int i = 0; i < moveStack.size(); i++) {
+            moves.push(moveStack.get(i));
+        }
+        played = true;
+        replayGame(moveStack);
+
+        for (int i = 0; i < Gboard.length; i++) {
+            for (int j = 0; j < Gboard[i].length; j++) {
+                Gboard[i][j].addActionListener(new AL());
+            }
+        }
     }
     /**
      * Handles the undoing of the player's move.
@@ -178,7 +199,7 @@ public class PVE extends Entity {
     }
 
     @Override
-    public void replayGame() {
+    public void replayGame(Stack<Move> moveStack) {
         Thread thread = new Thread(() ->{
             turn = 1;
             bitBoard.clear();
@@ -190,29 +211,78 @@ public class PVE extends Entity {
                     Image img = icon.getImage();
                     Gboard[i][j].setImg(img);
                     Gboard[i][j].repaint();
-                    Gboard[i][j].removeActionListener(Gboard[i][j].getActionListeners()[0]);
+                    if(Gboard[i][j].getActionListeners().length > 0)
+                        Gboard[i][j].removeActionListener(Gboard[i][j].getActionListeners()[0]);
                 }
             }
-            int size =  moves.size();
+            int size =  moveStack.size();
+            int count = 0;
             for (int i = 0; i < size; i++) {
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                Move move = moves.get(i);
+                Move move = moveStack.get(i);
                 markButton(move.i, move.j, move.state, move.player);
                 turn = move.player;
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
-                int count = CheckSos((short) move.i, (short) move.j, turnColor);
+                count = CheckSos((short) move.i, (short) move.j, turnColor);
 
 
 
             }
+            if(!moveStack.isEmpty() && count == 0)
+                turn = 3 - turn;
+            played = false;
         });
         thread.start();
     }
+    @Override
+    public void saveGame(GameType gameType) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
 
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("SOS Files", "sos");
+        fileChooser.setFileFilter(filter);
+        String selectedFilePath = null;
+        // Show the open dialog
+        int result = fileChooser.showSaveDialog(this);
+
+        // Check if a file was selected
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Get the selected file
+            selectedFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+            if (!selectedFilePath.endsWith(".sos")) {
+                selectedFilePath += ".sos";
+            } else {
+                return;
+            }
+            try (FileOutputStream fos = new FileOutputStream(selectedFilePath);
+                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+                oos.writeObject(gameType);
+                oos.writeInt(board_size);
+                oos.writeObject(moves);
+                oos.writeObject(difficultyLevel);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+
+            }
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                     UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     class AL implements ActionListener {
 
         @Override
@@ -360,7 +430,7 @@ public class PVE extends Entity {
                 newGame();
                 break;
             case 1:
-                replayGame();
+                replayGame(moves);
                 break;
             case 2: // Exit
                 System.exit(0);

@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class SButton extends JButton
 {
-    private Image img;
+    private transient Image img;
     public State letter;
 
     public Color[] linesArray;

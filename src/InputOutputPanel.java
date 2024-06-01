@@ -18,7 +18,7 @@ public class InputOutputPanel extends JPanel {
      */
     public InputOutputPanel(AbstractGraphicsBoard game)
     {
-        setLayout(new GridLayout(2,0));
+        setLayout(new GridLayout(3,1));
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
         this.sOption = new JRadioButton();
@@ -43,12 +43,31 @@ public class InputOutputPanel extends JPanel {
         bottomPanel.add(sOption);
         bottomPanel.add(new JLabel("O:"));
         bottomPanel.add(oOption);
+        JPanel buttonPlanel = new JPanel();
+        buttonPlanel.setLayout(new GridLayout(1, 3));
         add(bottomPanel);
         JButton undo = new JButton("undo");
-        add(undo);
+        buttonPlanel.add(undo);
         JButton redo = new JButton("redo");
-        add(redo);
+        buttonPlanel.add(redo);
         game.state = State.S;
+
+        JButton saveGame = new JButton("Save Game");
+        buttonPlanel.add(saveGame);
+        add(buttonPlanel);
+        saveGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!(game instanceof EVE)) {
+                    if(game instanceof PVP)
+                        game.saveGame(GameType.PVP);
+                    else if (game instanceof PVE && !((PVE) game).played) {
+                        game.saveGame(GameType.PVE);
+                    }
+                }
+
+            }
+        });
         undo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

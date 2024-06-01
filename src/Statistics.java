@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Stack;
 
 public class Statistics extends Entity{
     private int computer2Score;
@@ -127,7 +128,7 @@ public class Statistics extends Entity{
      * Replays the game based on the recorded moves.
      */
     @Override
-    public void replayGame() {
+    public void replayGame(Stack<Move> moveStack) {
 
     }
 

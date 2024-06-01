@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Stack;
 
 public class EVE extends Entity{
     private int computer2Score;
@@ -121,7 +122,7 @@ public class EVE extends Entity{
      * Replays the game based on the recorded moves.
      */
     @Override
-    public void replayGame() {
+    public void replayGame(Stack<Move> moveStack) {
         Thread thread = new Thread(() ->{
             turn = 1;
             bitBoard.clear();
@@ -136,14 +137,14 @@ public class EVE extends Entity{
 //                    Gboard[i][j].removeActionListener(Gboard[i][j].getActionListeners()[0]);
                 }
             }
-            int size =  moves.size();
+            int size =  moveStack.size();
             for (int i = 0; i < size; i++) {
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                Move move = moves.get(i);
+                Move move = moveStack.get(i);
                 markButton(move.i, move.j, move.state, move.player);
                 turn = move.player;
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
@@ -170,7 +171,7 @@ public class EVE extends Entity{
         int choice = menu.getChoice();
         switch (choice) {
             case 0:
-                replayGame();
+                replayGame(moves);
                 break;
             case 1: // Exit
                 System.exit(0);
