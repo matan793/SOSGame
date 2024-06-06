@@ -13,6 +13,7 @@ import java.util.Stack;
 
 public abstract class AbstractGraphicsBoard extends JPanel implements Serializable {
     private static final long serialVersionUID = 1L;
+    protected InputOutputPanel inputOutputPanel;
 
     protected SButton[][]  Gboard;
     protected int boardCounter;
@@ -67,6 +68,11 @@ public abstract class AbstractGraphicsBoard extends JPanel implements Serializab
         boardCounter++;
         moves.push(new Move(row, col, s, player));
     }
+
+    public void setInputOutputPanel(InputOutputPanel inputOutputPanel) {
+        this.inputOutputPanel = inputOutputPanel;
+    }
+
     /**
      * Checks if the game board is full.
      * @return True if the game board is full, false otherwise

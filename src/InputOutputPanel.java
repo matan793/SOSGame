@@ -9,7 +9,7 @@ import java.awt.event.ItemListener;
 
 public class InputOutputPanel extends JPanel {
     private int playerOneScore, playerTwoScore;
-    private JLabel playerOneText, playerTwoText;
+    public JLabel playerOneText, playerTwoText;
     private JRadioButton sOption, oOption;
     private AbstractGraphicsBoard game;
     /**

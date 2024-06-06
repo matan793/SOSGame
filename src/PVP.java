@@ -5,11 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Stack;
+import java.util.List;
 
 public class PVP extends AbstractGraphicsBoard{
 
@@ -47,8 +49,8 @@ public class PVP extends AbstractGraphicsBoard{
             moves.push(moveStack.get(i));
         }
         replayGame(moveStack);
-        for (int i = 0; i < super.Gboard.length; i++) {
-            for (int j = 0; j < super.Gboard[i].length; j++) {
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
                 Gboard[i][j].addActionListener(new AL());
             }
         }
@@ -76,6 +78,12 @@ public class PVP extends AbstractGraphicsBoard{
                     playerOneScore += count;
                 else
                     playerTwoScore += count;
+                if(inputOutputPanel != null)
+                {
+                    inputOutputPanel.playerOneText.setText("player One:" + playerOneScore);
+                    inputOutputPanel.playerTwoText.setText("player Two:" + playerTwoScore);
+                    //inputOutputPanel.repaint();
+                }
                 if(boardFull())
                     endGame();
 
@@ -138,6 +146,11 @@ public class PVP extends AbstractGraphicsBoard{
         }
         playerOneScore = 0;
         playerTwoScore = 0;
+        if(inputOutputPanel != null)
+        {
+            inputOutputPanel.playerOneText.setText("player One:" + playerOneScore);
+            inputOutputPanel.playerTwoText.setText("player Two:" + playerTwoScore);
+        }
     }
 
     /**
@@ -162,6 +175,11 @@ public class PVP extends AbstractGraphicsBoard{
             playerTwoScore -= sosCount;
         else
             playerOneScore -= sosCount;
+        if(inputOutputPanel != null)
+        {
+            inputOutputPanel.playerOneText.setText("player One:" + playerOneScore);
+            inputOutputPanel.playerTwoText.setText("player Two:" + playerTwoScore);
+        }
         boardCounter--;
         redoMoves.push(move);
         if(sosCount == 0)
@@ -283,6 +301,11 @@ public class PVP extends AbstractGraphicsBoard{
             playerOneScore += count;
         else
             playerTwoScore += count;
+        if(inputOutputPanel != null)
+        {
+            inputOutputPanel.playerOneText.setText("player One:" + playerOneScore);
+            inputOutputPanel.playerTwoText.setText("player Two:" + playerTwoScore);
+        }
         if(boardFull())
             endGame();
 
@@ -295,6 +318,8 @@ public class PVP extends AbstractGraphicsBoard{
     @Override
     public void replayGame(Stack<Move> moveStack) {
        Thread thread = new Thread(() ->{
+
+
            turn = 1;
            bitBoard.clear();
            boardCounter = 0;
@@ -326,6 +351,11 @@ public class PVP extends AbstractGraphicsBoard{
                    playerOneScore += count;
                else
                    playerTwoScore += count;
+               if(inputOutputPanel != null)
+               {
+                   inputOutputPanel.playerOneText.setText("player One:" + playerOneScore);
+                   inputOutputPanel.playerTwoText.setText("player Two:" + playerTwoScore);
+               }
                if(boardFull())
                    endGame();
 

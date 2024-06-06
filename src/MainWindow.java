@@ -170,13 +170,15 @@ public class MainWindow extends JFrame {
         }
         else
             System.exit(0);
+        InputOutputPanel inputOutputPanel = new InputOutputPanel(sosGame);
+        sosGame.setInputOutputPanel(inputOutputPanel);
         setTitle("Sos Game");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(size * 100, size * 100);
+        setSize(size * 120, size * 120);
         setLayout(new BorderLayout());
         add(sosGame, BorderLayout.CENTER);
-        add(new InputOutputPanel(sosGame), BorderLayout.NORTH);
+        add(inputOutputPanel, BorderLayout.NORTH);
         setLocationRelativeTo(null);
         setVisible(true);
 

@@ -151,7 +151,7 @@ public abstract class Entity extends AbstractGraphicsBoard {
     @Override
     public void markButton(int row, int col, State s, int turn) {
         super.markButton(row, col, s, turn);
-        moves.push(new Move(row, col, s, turn));
+        //moves.push(new Move(row, col, s, turn));
 
     }
     /**

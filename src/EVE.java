@@ -37,6 +37,8 @@ public class EVE extends Entity{
                             Thread.sleep(150);
                             sosCount = RandomMove();
                             computerScore+=sosCount;
+                            if(inputOutputPanel != null)
+                                inputOutputPanel.playerOneText.setText("player One:" + computerScore);
                         }while (sosCount > 0);
                     }
                     else if (a1 == Algorithm.Expanding) {
@@ -45,6 +47,8 @@ public class EVE extends Entity{
                             Thread.sleep(150);
                             sosCount = ExpandingMove();
                             computerScore+=sosCount;
+                            if(inputOutputPanel != null)
+                                inputOutputPanel.playerOneText.setText("player One:" + computerScore);
                         }while (sosCount > 0);
                     } else if (a1 == Algorithm.AroundMoves) {
                         int sosCount = 0;
@@ -52,6 +56,8 @@ public class EVE extends Entity{
                             Thread.sleep(150);
                             sosCount = AroundMovesMove();
                             computerScore+=sosCount;
+                            if(inputOutputPanel != null)
+                                inputOutputPanel.playerOneText.setText("player One:" + computerScore);
                         }while (sosCount > 0);
                     }
 
@@ -69,6 +75,8 @@ public class EVE extends Entity{
                                 Thread.sleep(150);
                                 sosCount = RandomMove();
                                 computer2Score += sosCount;
+                                if(inputOutputPanel != null)
+                                    inputOutputPanel.playerTwoText.setText("player Two:" + computer2Score);
                             } while (sosCount > 0);
                         } else if (a2 == Algorithm.Expanding) {
                             int sosCount = 0;
@@ -76,6 +84,8 @@ public class EVE extends Entity{
                                 Thread.sleep(150);
                                 sosCount = ExpandingMove();
                                 computer2Score += sosCount;
+                                if(inputOutputPanel != null)
+                                    inputOutputPanel.playerTwoText.setText("player Two:" + computer2Score);
                             } while (sosCount > 0);
                         } else if (a2 == Algorithm.AroundMoves) {
                             int sosCount = 0;
@@ -83,6 +93,8 @@ public class EVE extends Entity{
                                 Thread.sleep(150);
                                 sosCount = AroundMovesMove();
                                 computer2Score += sosCount;
+                                if(inputOutputPanel != null)
+                                    inputOutputPanel.playerTwoText.setText("player Two:" + computer2Score);
                             } while (sosCount > 0);
                         }
                     }

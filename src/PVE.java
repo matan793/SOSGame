@@ -28,21 +28,20 @@ public class PVE extends Entity {
                 Gboard[i][j].addActionListener(new AL());
             }
         }
-
     }
     public PVE(int bsize, Algorithm difficultyLevel, Stack<Move> moveStack)
     {
         super(bsize);
         this.playerScore = 0;
         this.difficultyLevel = difficultyLevel;
-        for (int i = 0; i < moveStack.size(); i++) {
-            moves.push(moveStack.get(i));
-        }
+//        for (int i = 0; i < moveStack.size(); i++) {
+//            moves.push(moveStack.get(i));
+//        }
         played = true;
         replayGame(moveStack);
 
-        for (int i = 0; i < Gboard.length; i++) {
-            for (int j = 0; j < Gboard[i].length; j++) {
+        for (int i = 0; i < bsize; i++) {
+            for (int j = 0; j < bsize; j++) {
                 Gboard[i][j].addActionListener(new AL());
             }
         }
@@ -69,6 +68,11 @@ public class PVE extends Entity {
             playerScore -= sosCount;
         else
             computerScore -= sosCount;
+        if(inputOutputPanel != null)
+        {
+            inputOutputPanel.playerOneText.setText("player One:" + playerScore);
+            inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+        }
         boardCounter--;
         redoMoves.push(move);
         if(sosCount == 0)
@@ -190,6 +194,11 @@ public class PVE extends Entity {
             playerScore += count;
         else
             computerScore += count;
+        if(inputOutputPanel != null)
+        {
+            inputOutputPanel.playerOneText.setText("player One:" + playerScore);
+            inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+        }
         if(boardFull())
             endGame();
         if(count == 0) {
@@ -204,6 +213,8 @@ public class PVE extends Entity {
             turn = 1;
             bitBoard.clear();
             boardCounter = 0;
+            playerScore = 0;
+            computerScore = 0;
             for (int i = 0; i < Gboard.length; i++) {
                 for (int j = 0; j < Gboard[i].length; j++) {
                     Gboard[i][j].clearLineArray();
@@ -228,7 +239,18 @@ public class PVE extends Entity {
                 turn = move.player;
                 Color turnColor  = turn == 1 ? Color.BLUE : Color.RED;
                 count = CheckSos((short) move.i, (short) move.j, turnColor);
-
+                if(count > 0)
+                {
+                    if(turn == 1)
+                        playerScore += count;
+                    else
+                        computerScore += count;
+                    if(inputOutputPanel != null)
+                    {
+                        inputOutputPanel.playerOneText.setText("player One:" + playerScore);
+                        inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+                    }
+                }
 
 
             }
@@ -295,6 +317,10 @@ public class PVE extends Entity {
                 markButton(s.row, s.col, state, turn);
                 int sosCount = CheckSos(s.row, s.col, Color.BLUE);
                 playerScore += sosCount;
+                if(inputOutputPanel != null)
+                {
+                    inputOutputPanel.playerOneText.setText("player One:" + playerScore);
+                }
                 if(boardFull())
                     endGame();
                 if (sosCount == 0) {
@@ -332,6 +358,10 @@ public class PVE extends Entity {
                 {
 
                 }
+                if(inputOutputPanel != null)
+                {
+                    inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+                }
 
             });
             thread.start();
@@ -360,7 +390,10 @@ public class PVE extends Entity {
                 {
 
                 }
-
+                if(inputOutputPanel != null)
+                {
+                    inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+                }
             });
             thread.start();
         }
@@ -382,7 +415,10 @@ public class PVE extends Entity {
                 {
 
                 }
-
+                if(inputOutputPanel != null)
+                {
+                    inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+                }
             });
             thread.start();
         }
@@ -400,6 +436,7 @@ public class PVE extends Entity {
         redoMoves.clear();
         bitBoard.clear();
         boardCounter = 0;
+        played = false;
         for (int i = 0; i < Gboard.length; i++) {
             for (int j = 0; j < Gboard[i].length; j++) {
                 Gboard[i][j].clearLineArray();
@@ -412,6 +449,11 @@ public class PVE extends Entity {
         }
         playerScore = 0;
         computerScore = 0;
+        if(inputOutputPanel != null)
+        {
+            inputOutputPanel.playerOneText.setText("player One:" + computerScore);
+            inputOutputPanel.playerTwoText.setText("player Two:" + computerScore);
+        }
     }
     /**
      * Handles the end of the game, displaying the winner and options for the player.
